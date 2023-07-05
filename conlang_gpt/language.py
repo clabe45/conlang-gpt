@@ -30,6 +30,8 @@ def generate_english_text(model):
     return english_text
 
 def improve_language(guide, model, mode):
+    click.echo(f"Improving language using {model}...")
+
     if mode == "basic":
         # Identify problems with the language
         chat_completion = openai.ChatCompletion.create(
@@ -41,7 +43,6 @@ def improve_language(guide, model, mode):
 
     elif mode == "example":
         # Attempt to translate a random English sentence
-        click.echo(f"Improving language using {model}...")
         click.echo("Example mode is experimental. It may not work as expected.")
         english_text = generate_english_text(model)
         translation = translate_text(english_text, guide, model)
