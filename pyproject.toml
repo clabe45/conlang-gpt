@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "lang-gen"
+version = "0.1.0"
+description = ""
+authors = ["Caleb Sacks <16855387+clabe45@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "lang_gen"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
