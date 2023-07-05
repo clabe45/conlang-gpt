@@ -15,6 +15,7 @@ def translate_text(text, language_guide, model):
     return translation
 
 def generate_english_text(model):
+    click.echo(click.style(f"Generating random English text using {model}...", dim=True))
     chat_completion = openai.ChatCompletion.create(
         model=model,
         temperature=0.9,
