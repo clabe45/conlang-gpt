@@ -13,6 +13,10 @@ python-dotenv = "^1.0.0"
 click = "^8.1.3"
 
 
+[tool.poetry.scripts]
+conlang = "conlang_gpt.__init__:cli"
+
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
