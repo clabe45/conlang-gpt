@@ -37,7 +37,7 @@ def improve_language(guide, model, mode):
         chat_completion = openai.ChatCompletion.create(
             model=model,
             temperature=0.2,
-            messages=[{"role": "user", "content": f"Please identify one flaw or point of confusion with the language outlined below along with a detailed solution.\n\nLanguage guide:\n\n{guide}"}]
+            messages=[{"role": "user", "content": f"Please identify one flaw, contradiction or point of confusion with the language outlined below along with detailed, actionable steps to fix it.\n\nLanguage guide:\n\n{guide}"}]
         )
         revisions = chat_completion['choices'][0]['message']['content']
 
@@ -53,7 +53,7 @@ def improve_language(guide, model, mode):
         chat_completion = openai.ChatCompletion.create(
             model=model,
             temperature=0.1,
-            messages=[{"role": "user", "content": f"Please identify one flaw or point of confusion with the language outlined below and then propose a solution. I included a sample translation to give you more context.\n\nLanguage guide:\n\n{guide}\n\nSample English text: {english_text}\n\nTranslated text: {translation}"}]
+            messages=[{"role": "user", "content": f"Please identify one flaw or point of confusion with the language outlined below along with detailed, actionable steps to fix it. I included a sample translation to give you more context.\n\nLanguage guide:\n\n{guide}\n\nSample English text: {english_text}\n\nTranslated text: {translation}"}]
         )
         revisions = chat_completion['choices'][0]['message']['content']
     else:
