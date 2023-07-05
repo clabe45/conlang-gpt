@@ -63,6 +63,9 @@ def modify(input_guide, output_guide, changes, model):
 def improve(input_guide, output_guide, mode, n, model):
     """Automatically improve the language."""
 
+    if mode == "example":
+        click.echo(click.style("Example mode is experimental. It may not work as expected.", fg="yellow"))
+
     # Load the beginner's guide
     with open(input_guide, "r") as file:
         guide = file.read()
