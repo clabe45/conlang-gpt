@@ -22,7 +22,7 @@ def generate_english_text(model):
         frequency_penalty=0.5,
         presence_penalty=0.5,
         messages=[
-            {"role": "system", "content": "You are an unpredictable writing assistant."},
+            {"role": "system", "content": "You are a writing assistant who likes to write about different topics."},
             {"role": "user", "content": "Please generate a random English sentence."}
         ]
     )
