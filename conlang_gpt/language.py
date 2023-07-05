@@ -82,7 +82,7 @@ def generate_language(design_goals, model):
         model=model,
         temperature=0.3,
         messages=[
-            {"role": "user", "content": f"Create a constructed language with the following design goals:\n\n{design_goals}\n\nYour response should be an exhaustive reference sheet describing the language."}
+            {"role": "user", "content": f"Create a constructed language with the following design goals:\n\n{design_goals}\n\nYour response should be an exhaustive reference sheet including all the information that is needed to use the language. Assume the reader has no prior experience using the language."}
         ],
     )
     guide = chat_completion['choices'][0]['message']['content']
