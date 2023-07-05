@@ -30,7 +30,7 @@ def create(design_goals, output_guide, model):
     with open(output_guide, "w") as file:
         file.write(guide)
 
-    click.echo(f"Language generated and saved to {output_guide} successfully.")
+    click.echo(click.style(f"Language generated and saved to {output_guide} successfully.", dim=True))
 
 @cli.command()
 @click.option("--input-guide", prompt="Enter the filename of the language guide")
@@ -52,7 +52,7 @@ def modify(input_guide, output_guide, changes, model):
     with open(output_guide, "w") as file:
         file.write(guide)
 
-    click.echo(f"Language modified and saved to {output_guide} successfully.")
+    click.echo(click.style(f"Language modified and saved to {output_guide} successfully.", dim=True))
 
 @cli.command()
 @click.option("--input-guide", prompt="Enter the filename of the language guide")
@@ -75,7 +75,7 @@ def improve(input_guide, output_guide, mode, steps, model):
     with open(output_guide, "w") as file:
         file.write(guide)
 
-    click.echo(f"Language improved and saved to {output_guide} successfully.")
+    click.echo(click.style(f"Language improved and saved to {output_guide} successfully.", dim=True))
 
 @cli.command()
 @click.option("--guide", prompt="Enter the filename of the language guide")

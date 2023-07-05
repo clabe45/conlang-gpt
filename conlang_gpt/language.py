@@ -5,7 +5,7 @@ import openai
 def translate_text(text, language_guide, model):
     """Translate text into a constructed language."""
 
-    click.echo(f"Translating text using {model}...")
+    click.echo(click.style(f"Translating text using {model}...", dim=True))
     chat_completion = openai.ChatCompletion.create(
         model=model,
         messages=[{"role": "user", "content": f"Translate the text below into the following constructed language. Show your work in detail.\n\nLanguage guide:\n\n{language_guide}\n\nText to translate:\n\n{text}"}]
@@ -30,7 +30,7 @@ def generate_english_text(model):
     return english_text
 
 def improve_language(guide, model, mode):
-    click.echo(f"Improving language using {model}...")
+    click.echo(click.style(f"Improving language using {model}...", dim=True))
 
     if mode == "basic":
         # Identify problems with the language
@@ -44,7 +44,7 @@ def improve_language(guide, model, mode):
 
     elif mode == "example":
         # Attempt to translate a random English sentence
-        click.echo("Example mode is experimental. It may not work as expected.")
+        click.echo(click.style("Example mode is experimental. It may not work as expected.", fg="yellow"))
         english_text = generate_english_text(model)
         translation = translate_text(english_text, guide, model)
         click.echo(f"Sample English text:\n\n{english_text}\n")
@@ -94,7 +94,7 @@ def generate_language(design_goals, model):
 def modify_language(guide, changes, model):
     """Apply specified changes to a constructed language."""
 
-    click.echo(f"Modifying language using {model}...")
+    click.echo(click.style(f"Modifying language using {model}...", dim=True))
     chat_completion = openai.ChatCompletion.create(
         model=model,
         temperature=0.1,
