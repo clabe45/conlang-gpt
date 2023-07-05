@@ -42,7 +42,7 @@ def improve_language(guide, model, mode):
     elif mode == "example":
         # Attempt to translate a random English sentence
         click.echo(f"Improving language using {model}...")
-        click.echo("This feature is experimental and may not work as expected. Please review the output carefully.")
+        click.echo("Example mode is experimental. It may not work as expected.")
         english_text = generate_english_text(model)
         translation = translate_text(english_text, guide, model)
         click.echo(f"Sample English text:\n\n{english_text}\n")
