@@ -8,7 +8,7 @@ def translate_text(text, language_guide, model):
     click.echo(click.style(f"Translating text using {model}...", dim=True))
     chat_completion = openai.ChatCompletion.create(
         model=model,
-        messages=[{"role": "user", "content": f"Translate the text below into the following constructed language. Show your work in detail.\n\nLanguage guide:\n\n{language_guide}\n\nText to translate:\n\n{text}"}]
+        messages=[{"role": "user", "content": f"Translate the text below from or into the following constructed language. Show your work in detail.\n\nLanguage guide:\n\n{language_guide}\n\nText to translate:\n\n{text}"}]
     )
 
     translation = chat_completion['choices'][0]['message']['content']
