@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "lang-gen"
+name = "conlang-gpt"
 version = "0.1.0"
 description = ""
 authors = ["Caleb Sacks <16855387+clabe45@users.noreply.github.com>"]
 readme = "README.md"
-packages = [{include = "lang_gen"}]
+packages = [{include = "conlang_gpt"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
