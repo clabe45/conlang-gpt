@@ -1,16 +1,6 @@
-import os
-
 import click
-import dotenv
-import openai
 
 from .language import generate_language, modify_language, improve_language, translate_text
-
-dotenv.load_dotenv()
-
-if "OPENAI_API_KEY" not in os.environ:
-    raise Exception("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable to your API key.")
-openai.api_key = os.environ["OPENAI_API_KEY"]
 
 @click.group()
 def cli():

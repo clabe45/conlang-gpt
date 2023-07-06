@@ -1,12 +1,13 @@
 import click
-import openai
+
+from .openai import complete_chat
 
 
 def translate_text(text, language_guide, model):
     """Translate text into a constructed language."""
 
     click.echo(click.style(f"Translating text using {model}...", dim=True))
-    chat_completion = openai.ChatCompletion.create(
+    chat_completion = complete_chat(
         model=model,
         messages=[{"role": "user", "content": f"Translate the text below from or into the following constructed language. Explain how you arrived at the translation.\n\nLanguage guide:\n\n{language_guide}\n\nText to translate:\n\n{text}"}]
     )
@@ -16,7 +17,7 @@ def translate_text(text, language_guide, model):
 
 def generate_english_text(model):
     click.echo(click.style(f"Generating random English text using {model}...", dim=True))
-    chat_completion = openai.ChatCompletion.create(
+    chat_completion = complete_chat(
         model=model,
         temperature=0.9,
         frequency_penalty=0.5,
@@ -35,7 +36,7 @@ def improve_language(guide, model, mode):
 
     if mode == "basic":
         # Identify problems with the language
-        chat_completion = openai.ChatCompletion.create(
+        chat_completion = complete_chat(
             model=model,
             temperature=0.5,
             presence_penalty=0.5,
@@ -51,7 +52,7 @@ def improve_language(guide, model, mode):
         click.echo(f"Translated text:\n\n{translation}\n")
 
         # Identify problems with the language using the translated text as an example/reference
-        chat_completion = openai.ChatCompletion.create(
+        chat_completion = complete_chat(
             model=model,
             temperature=0.1,
             messages=[{"role": "user", "content": f"Please identify one flaw or point of confusion with the language outlined below along with specific, detailed, actionable steps to fix it. I included a sample translation to give you more context.\n\nLanguage guide:\n\n{guide}\n\nSample English text: {english_text}\n\nTranslated text: {translation}"}]
@@ -63,7 +64,7 @@ def improve_language(guide, model, mode):
     click.echo(f"Change:\n\n{revisions}\n")
 
     # Rewrite the language guide
-    chat_completion = openai.ChatCompletion.create(
+    chat_completion = complete_chat(
         model=model,
         temperature=0.1,
         messages=[
@@ -78,7 +79,7 @@ def generate_language(design_goals, model):
     """Generate a constructed language."""
 
     click.echo(f"Generating language using {model}...")
-    chat_completion = openai.ChatCompletion.create(
+    chat_completion = complete_chat(
         model=model,
         temperature=0.3,
         messages=[
@@ -94,7 +95,7 @@ def modify_language(guide, changes, model):
     """Apply specified changes to a constructed language."""
 
     click.echo(click.style(f"Modifying language using {model}...", dim=True))
-    chat_completion = openai.ChatCompletion.create(
+    chat_completion = complete_chat(
         model=model,
         temperature=0.1,
         messages=[
