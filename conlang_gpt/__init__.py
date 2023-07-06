@@ -46,7 +46,6 @@ def modify(input_guide, output_guide, changes, model):
 
     # Update the language guide
     guide = modify_language(guide, changes, model)
-    click.echo(f"Guide to updated language:\n\n{guide}\n")
 
     # Save the new guide to a file
     with open(output_guide, "w") as file:
