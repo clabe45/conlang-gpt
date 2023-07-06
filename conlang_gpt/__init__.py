@@ -58,7 +58,7 @@ def modify(input_guide, output_guide, changes, model):
 @click.option("--input-guide", prompt="Enter the filename of the language guide")
 @click.option("--output-guide", prompt="Enter the filename to save the improved language guide to")
 @click.option("--mode", default="basic", type=click.Choice(["basic", "example"]), help="Mode to use. Defaults to basic. Set to the experimental 'example' mode to include a new random translation in each revision.")
-@click.option("-n", default=3, help="Number of revisions to perform. Defaults to 3.")
+@click.option("-n", default=1, help="Number of revisions to perform. Defaults to 1.")
 @click.option("--model", default="gpt-3.5-turbo-16k", help="OpenAI model to use. Defaults to gpt-3.5-turbo-16k.")
 def improve(input_guide, output_guide, mode, n, model):
     """Automatically improve the language."""
