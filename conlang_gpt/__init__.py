@@ -85,7 +85,7 @@ def improve(input_guide, output_guide, mode, n, model):
 @click.option("--text", prompt="Enter the text to translate")
 @click.option("--model", default="gpt-3.5-turbo-16k", help="OpenAI model to use")
 def translate(guide, text, model):
-    """Translate text into a constructed language."""
+    """Translate text to or from a constructed language."""
 
     # Load the beginner's guide
     with open(guide, "r") as file:
