@@ -71,7 +71,6 @@ def improve_language(guide, model, mode):
         ]
     )
     improved_guide = chat_completion['choices'][0]['message']['content']
-    click.echo(f"Guide to improved language:\n\n{guide}\n")
 
     return improved_guide
 
@@ -103,6 +102,5 @@ def modify_language(guide, changes, model):
         ]
     )
     improved_guide = chat_completion['choices'][0]['message']['content']
-    click.echo(f"Guide to improved language:\n\n{guide}\n")
 
     return improved_guide
