@@ -83,7 +83,7 @@ def generate_language(design_goals, model):
     click.echo(f"Generating language using {model}...")
     chat_completion = complete_chat(
         model=model,
-        temperature=0.3,
+        temperature=0.9,
         messages=[
             {"role": "user", "content": f"Create a constructed language with the following design goals:\n\n{design_goals}\n\nYour response should be an exhaustive reference sheet including all the information that is needed to use the language. Assume the reader has no prior experience using the language."}
         ],
