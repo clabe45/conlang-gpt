@@ -9,57 +9,61 @@ from .language import generate_language, modify_language, improve_language, crea
 def cli():
     pass
 
-@cli.command()
+@cli.group()
+def guide():
+    pass
+
+@guide.command()
 @click.option("--design-goals", prompt="Enter the design goals of the language")
-@click.option("--output-guide", prompt="Enter the filename to save the language guide to")
+@click.option("--output", prompt="Enter the filename to save the language guide to")
 @click.option("--model", default="gpt-3.5-turbo-16k", help="OpenAI model to use. Defaults to gpt-3.5-turbo-16k.")
-def create(design_goals, output_guide, model):
+def create(design_goals, output, model):
     """Create a constructed language."""
 
     # Generate language guide
     guide = generate_language(design_goals, model)
 
     # Save the language guide to a file
-    with open(output_guide, "w") as file:
+    with open(output, "w") as file:
         file.write(guide)
 
     click.echo(click.style(f"Language generated and saved to {output_guide} successfully.", dim=True))
 
-@cli.command()
-@click.option("--input-guide", prompt="Enter the filename of the language guide")
-@click.option("--output-guide", prompt="Enter the filename to save the improved language guide to")
+@guide.command()
+@click.option("--input", prompt="Enter the filename of the language guide")
+@click.option("--output", prompt="Enter the filename to save the improved language guide to")
 @click.option("--changes", prompt="Enter the changes to apply to the language guide")
 @click.option("--model", default="gpt-3.5-turbo-16k", help="OpenAI model to use. Defaults to gpt-3.5-turbo-16k.")
-def modify(input_guide, output_guide, changes, model):
+def modify(input, output, changes, model):
     """Make specific changes to the language."""
 
     # Load the beginner's guide
-    with open(input_guide, "r") as file:
+    with open(input, "r") as file:
         guide = file.read()
 
     # Update the language guide
     guide = modify_language(guide, changes, model)
 
     # Save the new guide to a file
-    with open(output_guide, "w") as file:
+    with open(output, "w") as file:
         file.write(guide)
 
-    click.echo(click.style(f"Language modified and saved to {output_guide} successfully.", dim=True))
+    click.echo(click.style(f"Language modified and saved to {output} successfully.", dim=True))
 
-@cli.command()
-@click.option("--input-guide", prompt="Enter the filename of the language guide")
-@click.option("--output-guide", prompt="Enter the filename to save the improved language guide to")
+@guide.command()
+@click.option("--input", prompt="Enter the filename of the language guide")
+@click.option("--output", prompt="Enter the filename to save the improved language guide to")
 @click.option("--mode", default="basic", type=click.Choice(["basic", "example"]), help="Mode to use. Defaults to basic. Set to the experimental 'example' mode to include a new random translation in each revision.")
 @click.option("-n", default=1, help="Number of revisions to perform. Defaults to 1.")
 @click.option("--model", default="gpt-3.5-turbo-16k", help="OpenAI model to use. Defaults to gpt-3.5-turbo-16k.")
-def improve(input_guide, output_guide, mode, n, model):
+def improve(input, output, mode, n, model):
     """Automatically improve the language."""
 
     if mode == "example":
         click.echo(click.style("Example mode is experimental. It may not work as expected.", fg="yellow"))
 
     # Load the beginner's guide
-    with open(input_guide, "r") as file:
+    with open(input, "r") as file:
         guide = file.read()
 
     # Revise the language guide
@@ -67,18 +71,22 @@ def improve(input_guide, output_guide, mode, n, model):
         guide = improve_language(guide, model, mode)
 
     # Save the improved guide to a file
-    with open(output_guide, "w") as file:
+    with open(output, "w") as file:
         file.write(guide)
 
-    click.echo(click.style(f"Language improved and saved to {output_guide} successfully.", dim=True))
+    click.echo(click.style(f"Language improved and saved to {output} successfully.", dim=True))
 
-@cli.command()
+@cli.group()
+def dictionary():
+    pass
+
+@dictionary.command()
 @click.option("--guide", prompt="Enter the filename of the language guide")
 @click.option("--output", prompt="Enter the path to the CSV file to save the words to (will be created if it doesn't exist)")
 @click.option("-n", default=15, help="Number of words to generate. Defaults to 15.")
 @click.option("--model", default="gpt-3.5-turbo-16k", help="OpenAI model to use. Defaults to gpt-3.5-turbo-16k.")
 @click.option("--embeddings-model", default="text-embedding-ada-002", help="OpenAI model to use for word embeddings. Defaults to text-embedding-ada-002.")
-def words(guide, output, n, model, embeddings_model):
+def add(guide, output, n, model, embeddings_model):
     """Generate words in the language (experimental)."""
 
     click.echo(click.style("This feature is experimental. It may not work as expected.", fg="yellow"))
@@ -120,7 +128,11 @@ def words(guide, output, n, model, embeddings_model):
         for word in all_words:
             writer.writerow([word, all_words[word]])
 
-@cli.command()
+@cli.group()
+def text():
+    pass
+
+@text.command()
 @click.option("--guide", prompt="Enter the filename of the language guide")
 @click.option("--text", prompt="Enter the text to translate")
 @click.option("--model", default="gpt-3.5-turbo-16k", help="OpenAI model to use")
