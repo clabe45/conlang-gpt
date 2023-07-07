@@ -176,7 +176,7 @@ def merge_dictionaries(a, b, embeddings_model):
         if a_word not in a or b_word not in b:
             continue
 
-        if similarity > 0.8:
+        if similarity > 0.95:
             if len(b_word) < len(a_word):
                 click.echo(click.style(f"Removing {a_word} because it is too similar to {b_word}.", dim=True))
                 del a[a_word]
