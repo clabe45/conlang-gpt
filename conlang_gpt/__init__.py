@@ -3,7 +3,7 @@ import os
 
 import click
 
-from .language import generate_language, modify_language, improve_language, generate_words, merge_dictionaries, translate_text
+from .language import generate_language, modify_language, improve_language, create_dictionary, merge_dictionaries, translate_text
 
 @click.group()
 def cli():
@@ -88,7 +88,7 @@ def words(guide, output, n, model, embeddings_model):
         guide = file.read()
 
     # Generate words
-    words = generate_words(guide, model, n)
+    words = create_dictionary(guide, model, n)
     click.echo(click.style(f"Generated {len(words)} words.", dim=True))
 
     # Save the words to a CSV file, appending to the file if it already exists

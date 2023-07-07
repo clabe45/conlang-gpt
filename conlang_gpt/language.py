@@ -109,7 +109,7 @@ def modify_language(guide, changes, model):
 
     return improved_guide
 
-def generate_words(guide, model, count) -> dict:
+def create_dictionary(guide, model, count) -> dict:
     """Generate words for a constructed language."""
 
     # Generate words
