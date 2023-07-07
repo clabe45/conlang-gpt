@@ -111,28 +111,6 @@ def modify_language(guide, changes, model):
 
     return improved_guide
 
-def create_dictionary(guide, model, count) -> dict:
-    """Generate words for a constructed language."""
-
-    # Generate words
-    click.echo(click.style(f"Generating words using {model}...", dim=True))
-    chat_completion = complete_chat(
-        model=model,
-        temperature=0.9,
-        presence_penalty=0.6,
-        messages=[
-            {"role": "user", "content": f"Generate {count} vocabulary words for the following constructed language. Format your response as a CSV document with two rows: Word and Translation.\n\nLanguage guide:\n\n{guide}"}
-        ]
-    )
-
-    # Parse the generated words
-    response = chat_completion['choices'][0]['message']['content']
-    reader = csv.reader(response.splitlines())
-    next(reader) # Skip the header row
-    words = {row[0]: row[1] for row in reader}
-
-    return words
-
 def _get_word_embeddings(word, embeddings_model):
     """Retrieve and cache the embeddings for a word."""
 
@@ -154,6 +132,53 @@ def _get_word_embeddings(word, embeddings_model):
             pickle.dump(word_embeddings, f)
 
     return word_embeddings[word]
+
+def reduce_dictionary(words, embeddings_model):
+    """Remove similar words from a dictionary."""
+
+    click.echo(click.style(f"Removing similar words using {embeddings_model}...", dim=True))
+
+    # Retrieve the embeddings for each word
+    word_embeddings = {word: _get_word_embeddings(word, embeddings_model) for word in words}
+
+    # Remove similar words
+    words_to_remove = set()
+    for word_a, embedding_a in word_embeddings.items():
+        for word_b, embedding_b in word_embeddings.items():
+            if word_a != word_b and cosine_similarity(embedding_a, embedding_b) > 0.95:
+                click.echo(click.style(f"Removed {word_b} because it is similar to {word_a}.", dim=True))
+                words_to_remove.add(word_b)
+
+    # Remove the similar words from the dictionary
+    for word in words_to_remove:
+        words.pop(word)
+
+    return words
+
+def create_dictionary(guide, count, model, embeddings_model) -> dict:
+    """Generate words for a constructed language."""
+
+    # Generate words
+    click.echo(click.style(f"Generating words using {model}...", dim=True))
+    chat_completion = complete_chat(
+        model=model,
+        temperature=0.9,
+        presence_penalty=0.6,
+        messages=[
+            {"role": "user", "content": f"Generate {count} vocabulary words for the following constructed language. Format your response as a CSV document with two rows: Word and Translation.\n\nLanguage guide:\n\n{guide}"}
+        ]
+    )
+
+    # Parse the generated words
+    response = chat_completion['choices'][0]['message']['content']
+    reader = csv.reader(response.splitlines())
+    next(reader) # Skip the header row
+    words = {row[0]: row[1] for row in reader}
+
+    # Remove similar words
+    words = reduce_dictionary(words, embeddings_model)
+
+    return words
 
 def merge_dictionaries(a, b, embeddings_model):
     """Merge two vocabulary dictionaries, removing similar words."""

@@ -96,7 +96,7 @@ def add(guide, output, n, model, embeddings_model):
         guide = file.read()
 
     # Generate words
-    words = create_dictionary(guide, model, n)
+    words = create_dictionary(guide, n, model, embeddings_model)
     click.echo(click.style(f"Generated {len(words)} words.", dim=True))
 
     # Save the words to a CSV file, appending to the file if it already exists
