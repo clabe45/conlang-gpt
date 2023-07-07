@@ -1,9 +1,12 @@
 [tool.poetry]
 name = "conlang-gpt"
 version = "0.1.0"
-description = ""
+description = "ChatGPT language generator and translator"
 authors = ["Caleb Sacks <16855387+clabe45@users.noreply.github.com>"]
 readme = "README.md"
+keywords = ["conlang", "chatgpt", "gpt 4", "openai"]
+github = "https://github.com/clabe45/conlang-gpt"
+license = "MIT"
 packages = [{include = "conlang_gpt"}]
 
 [tool.poetry.dependencies]
