@@ -189,6 +189,9 @@ def create_dictionary(guide, count, model, embeddings_model) -> dict:
 
     words = {row[0]: row[1] for row in reader}
 
+    if len(words) != count:
+        click.echo(click.style(f"Warning: {len(words)} words were generated, but {count} were requested.", fg="yellow"))
+
     # Remove similar words
     words = reduce_dictionary(words, embeddings_model)
 
