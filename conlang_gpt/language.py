@@ -158,14 +158,26 @@ def reduce_dictionary(words, embeddings_model):
 def create_dictionary(guide, count, model, embeddings_model) -> dict:
     """Generate words for a constructed language."""
 
+    # Choose a random topic
+    click.echo(click.style(f"Choosing a random topic using {model}...", dim=True))
+    chat_completion = complete_chat(
+        model=model,
+        temperature=0.9,
+        messages=[
+            {"role": "system", "content": "You are a writing assistant who virtually always suggests a different topic to write about."},
+            {"role": "user", "content": f"Enter a unique, random topic to write about:"}
+        ]
+    )
+    topic = chat_completion['choices'][0]['message']['content']
+
     # Generate words
-    click.echo(click.style(f"Generating words using {model}...", dim=True))
+    click.echo(click.style(f"Generating words about {topic} using {model}...", dim=True))
     chat_completion = complete_chat(
         model=model,
         temperature=0.9,
         presence_penalty=0.6,
         messages=[
-            {"role": "user", "content": f"Generate {count} random vocabulary words for the following constructed language. Format your response as a CSV document with two rows: Word and English Translation.\n\nLanguage guide:\n\n{guide}"}
+            {"role": "user", "content": f"Generate {count} random vocabulary words about {topic} for the following constructed language. Format your response as a CSV document with two rows: Word and English Translation.\n\nLanguage guide:\n\n{guide}"}
         ]
     )
 
