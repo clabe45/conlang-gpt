@@ -175,7 +175,6 @@ def create_dictionary(guide, count, model, embeddings_model) -> dict:
     chat_completion = complete_chat(
         model=model,
         temperature=0.9,
-        presence_penalty=0.6,
         messages=[
             {"role": "user", "content": f"Generate {count} random vocabulary words about {topic} for the following constructed language. Format your response as a CSV document with two rows: Word and English Translation.\n\nLanguage guide:\n\n{guide}"}
         ]
