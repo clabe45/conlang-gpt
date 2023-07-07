@@ -139,6 +139,8 @@ def merge_dictionaries(a, b, embeddings_model):
     b_embeddings = {word: get_embedding(word, embeddings_model) for word in b.keys()}
 
     # Calculate the cosine similarity between each pair of words
+    a = dict(a)
+    b = dict(b)
     similarities = {}
     for a_word, a_embedding in a_embeddings.items():
         for b_word, b_embedding in b_embeddings.items():
