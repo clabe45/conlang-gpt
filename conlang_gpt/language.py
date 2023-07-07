@@ -1,3 +1,5 @@
+import csv
+
 import click
 
 from .openai import complete_chat
@@ -116,30 +118,14 @@ def generate_words(guide, model, count) -> dict:
         temperature=0.9,
         presence_penalty=0.6,
         messages=[
-            {"role": "user", "content": f"Generate {count} single words for the following constructed language. Format your response as {count} lines of the form: `<conlang word>,<English translation>`.\n\nLanguage guide:\n\n{guide}"}
+            {"role": "user", "content": f"Generate {count} single words for the following constructed language. Format your response as a CSV document with two rows: Word and Translation.\n\nLanguage guide:\n\n{guide}"}
         ]
     )
 
     # Parse the generated words
-    lines = chat_completion['choices'][0]['message']['content'].split("\n")
-    words = {}
-    for line in lines:
-        if line:
-            # Remove leading and trailing whitespace
-            line = line.strip()
-
-            # Remove leading number if present (e.g., "1. ")
-            if '. ' in line:
-                first, rest = line.split('. ', 1)
-                if first.isnumeric():
-                    line = rest
-
-            # Split the line into the conlang word and its English translation
-            word, translation = line.split(",", 1)
-            word = word.strip()
-            translation = translation.strip()
-
-            # Add the word to the dictionary
-            words[word] = translation
+    response = chat_completion['choices'][0]['message']['content']
+    reader = csv.reader(response.splitlines())
+    next(reader) # Skip the header row
+    words = {row[0]: row[1] for row in reader}
 
     return words
