@@ -172,7 +172,10 @@ def create_dictionary(guide, count, model, embeddings_model) -> dict:
     # Parse the generated words
     response = chat_completion['choices'][0]['message']['content']
     reader = csv.reader(response.splitlines())
-    next(reader) # Skip the header row
+    header = next(reader)
+    if header != ["Word", "English Translation"]:
+        raise Exception(f"Invalid response. Expected a CSV document with two rows: Word and Translation. Received: {response}")
+
     words = {row[0]: row[1] for row in reader}
 
     # Remove similar words
