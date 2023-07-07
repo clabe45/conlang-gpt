@@ -31,7 +31,6 @@ def complete_chat(**kwargs):
         except openai.error.ServiceUnavailableError:
             click.echo(click.style(f"OpenAI API service unavailable. Retrying in {delay} second(s)...", fg="red"))
             time.sleep(delay)
-            delay *= 2
         except openai.error.Timeout:
             click.echo(click.style(f"OpenAI API timeout. Retrying in {delay} second(s)...", fg="red"))
             time.sleep(delay)
