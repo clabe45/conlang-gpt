@@ -1,5 +1,7 @@
 import csv
 from openai.embeddings_utils import cosine_similarity
+import os
+import pickle
 
 import click
 
@@ -131,12 +133,34 @@ def create_dictionary(guide, model, count) -> dict:
 
     return words
 
+def _get_word_embeddings(word, embeddings_model):
+    """Retrieve and cache the embeddings for a word."""
+
+    # Load the cached word embeddings
+    if os.path.exists(f".conlang/cache/embeddings/{embeddings_model}.pkl"):
+        with open(f".conlang/cache/embeddings/{embeddings_model}.pkl", "rb") as f:
+            word_embeddings = pickle.load(f)
+    else:
+        word_embeddings = {}
+
+    # Calculate the word embeddings if they are not cached
+    if word not in word_embeddings:
+        word_embeddings[word] = get_embedding(word, embeddings_model)
+
+        # Cache the word embeddings
+        if not os.path.exists(".conlang/cache/embeddings"):
+            os.makedirs(".conlang/cache/embeddings")
+        with open(f".conlang/cache/embeddings/{embeddings_model}.pkl", "wb") as f:
+            pickle.dump(word_embeddings, f)
+
+    return word_embeddings[word]
+
 def merge_dictionaries(a, b, embeddings_model):
     """Merge two vocabulary dictionaries, removing similar words."""
 
     # Retrieve the embeddings for each word
-    a_embeddings = {word: get_embedding(word, embeddings_model) for word in a.keys()}
-    b_embeddings = {word: get_embedding(word, embeddings_model) for word in b.keys()}
+    a_embeddings = {word: _get_word_embeddings(word, embeddings_model) for word in a.keys()}
+    b_embeddings = {word: _get_word_embeddings(word, embeddings_model) for word in b.keys()}
 
     # Calculate the cosine similarity between each pair of words
     a = dict(a)
