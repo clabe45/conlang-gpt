@@ -1,8 +1,9 @@
 import csv
+from openai.embeddings_utils import cosine_similarity
 
 import click
 
-from .openai import complete_chat
+from .openai import complete_chat, get_embedding
 
 
 def translate_text(text, language_guide, model):
@@ -129,3 +130,33 @@ def generate_words(guide, model, count) -> dict:
     words = {row[0]: row[1] for row in reader}
 
     return words
+
+def merge_dictionaries(a, b, embeddings_model):
+    """Merge two vocabulary dictionaries, removing similar words."""
+
+    # Retrieve the embeddings for each word
+    a_embeddings = {word: get_embedding(word, embeddings_model) for word in a.keys()}
+    b_embeddings = {word: get_embedding(word, embeddings_model) for word in b.keys()}
+
+    # Calculate the cosine similarity between each pair of words
+    similarities = {}
+    for a_word, a_embedding in a_embeddings.items():
+        for b_word, b_embedding in b_embeddings.items():
+            similarities[(a_word, b_word)] = cosine_similarity(a_embedding, b_embedding)
+
+    # Remove words that are too similar. Prefer shorter words.
+    for (a_word, b_word), similarity in similarities.items():
+        # Skip words that have already been removed
+        if a_word not in a or b_word not in b:
+            continue
+
+        if similarity > 0.8:
+            if len(b_word) < len(a_word):
+                del a[a_word]
+            else:
+                del b[b_word]
+
+    # Merge the dictionaries
+    merged = {**a, **b}
+
+    return merged

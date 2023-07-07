@@ -36,3 +36,7 @@ def complete_chat(**kwargs):
             time.sleep(delay)
 
     return completion
+
+
+def get_embedding(text, model):
+   return openai.Embedding.create(input = [text], model=model)['data'][0]['embedding']

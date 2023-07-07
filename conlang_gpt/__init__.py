@@ -3,7 +3,7 @@ import os
 
 import click
 
-from .language import generate_language, modify_language, improve_language, generate_words, translate_text
+from .language import generate_language, modify_language, improve_language, generate_words, merge_dictionaries, translate_text
 
 @click.group()
 def cli():
@@ -77,7 +77,8 @@ def improve(input_guide, output_guide, mode, n, model):
 @click.option("--output", prompt="Enter the path to the CSV file to save the words to (will be created if it doesn't exist)")
 @click.option("-n", default=15, help="Number of words to generate. Defaults to 15.")
 @click.option("--model", default="gpt-3.5-turbo-16k", help="OpenAI model to use. Defaults to gpt-3.5-turbo-16k.")
-def words(guide, output, n, model):
+@click.option("--embeddings-model", default="text-embedding-ada-002", help="OpenAI model to use for word embeddings. Defaults to text-embedding-ada-002.")
+def words(guide, output, n, model, embeddings_model):
     """Generate words in the language (experimental)."""
 
     click.echo(click.style("This feature is experimental. It may not work as expected.", fg="yellow"))
@@ -88,6 +89,7 @@ def words(guide, output, n, model):
 
     # Generate words
     words = generate_words(guide, model, n)
+    click.echo(click.style(f"Generated {len(words)} words.", dim=True))
 
     # Save the words to a CSV file, appending to the file if it already exists
     # Load existing words
@@ -103,8 +105,10 @@ def words(guide, output, n, model):
     else:
         existing_words = {}
 
-    # Combine the existing words with the new words, removing duplicates
-    all_words = existing_words | words
+    # Combine the existing words with the new words, removing similar words
+    click.echo(click.style("Removing similar words...", dim=True))
+    all_words = merge_dictionaries(existing_words, words, embeddings_model)
+    click.echo(click.style(f"Removed {len(existing_words) + len(words) - len(all_words)} similar words.", dim=True))
 
     # Sort the words alphabetically
     all_words = {word: all_words[word] for word in sorted(all_words)}
@@ -115,8 +119,6 @@ def words(guide, output, n, model):
         writer.writerow(["Word", "Translation"])
         for word in all_words:
             writer.writerow([word, all_words[word]])
-
-    click.echo(click.style(f"{len(words)} words generated and saved to {output} successfully.", dim=True))
 
 @cli.command()
 @click.option("--guide", prompt="Enter the filename of the language guide")
