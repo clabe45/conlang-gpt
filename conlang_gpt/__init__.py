@@ -116,7 +116,6 @@ def add(guide, output, n, model, embeddings_model):
     # Combine the existing words with the new words, removing similar words
     click.echo(click.style("Removing similar words...", dim=True))
     all_words = merge_dictionaries(existing_words, words, embeddings_model)
-    click.echo(click.style(f"Removed {len(existing_words) + len(words) - len(all_words)} similar words.", dim=True))
 
     # Sort the words alphabetically
     all_words = {word: all_words[word] for word in sorted(all_words)}
