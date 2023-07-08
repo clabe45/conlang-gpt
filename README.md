@@ -72,7 +72,7 @@ Usage: conlang guide create [OPTIONS]
 
 Options:
   --design-goals TEXT
-  --output TEXT
+  --guide TEXT
   --model TEXT         OpenAI model to use. Defaults to gpt-3.5-turbo-16k.
   --help               Show this message and exit.
 ```
@@ -88,8 +88,7 @@ Usage: conlang guide improve [OPTIONS]
   Automatically improve the language.
 
 Options:
-  --input TEXT
-  --output TEXT
+  --guide TEXT
   --dictionary TEXT
   --mode [simple|example]  Mode to use. Defaults to simple. Set to the
                            experimental 'example' mode to include a new random
@@ -112,8 +111,7 @@ Usage: conlang guide modify [OPTIONS]
   Make specific changes to the language.
 
 Options:
-  --input TEXT
-  --output TEXT
+  --guide TEXT
   --changes TEXT
   --model TEXT         OpenAI model to use. Defaults to gpt-3.5-turbo-16k.
   --help               Show this message and exit.
@@ -178,7 +176,7 @@ Usage: conlang dictionary add [OPTIONS]
 
 Options:
   --guide TEXT
-  --output TEXT
+  --dictionary TEXT
   -n INTEGER     Number of words to generate. Defaults to 15.
   --model TEXT   OpenAI model to use. Defaults to gpt-3.5-turbo-16k.
   --help         Show this message and exit.
