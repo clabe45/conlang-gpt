@@ -118,7 +118,7 @@ def improve_language(guide, dictionary, model, embeddings_model, text=None):
             model=model,
             temperature=0.5,
             presence_penalty=0.5,
-            messages=[{"role": "user", "content": f"Please identify one flaw, contradiction or point of confusion with the language outlined below along with specific, detailed, actionable steps to fix it. Note that a dictionary will be created separately.\n\nLanguage guide:\n\n{guide}"}]
+            messages=[{"role": "user", "content": f"If the language outlined below has any flaws, contradictions or points of confusion, please identify one and provide specific, detailed, actionable steps to fix it. Otherwise, respond with \"No problem found\". Note that a dictionary will be created separately.\n\nLanguage guide:\n\n{guide}"}]
         )
         revisions = chat_completion['choices'][0]['message']['content']
 
@@ -131,9 +131,14 @@ def improve_language(guide, dictionary, model, embeddings_model, text=None):
         chat_completion = complete_chat(
             model=model,
             temperature=0.1,
-            messages=[{"role": "user", "content": f"Please identify one flaw or point of confusion with the language outlined below along with specific, detailed, actionable steps to fix it. I included a sample translation to give you more context.\n\nLanguage guide:\n\n{guide}\n\nSample English text: {text}\n\nTranslated text: {translation}"}]
+            messages=[{"role": "user", "content": f"If the language outlined below has any flaws, contradictions or points of confusion, please identify one and provide specific, detailed, actionable steps to fix it. Otherwise, respond with \"No problem found\". I included a sample translation to give you more context.\n\nLanguage guide:\n\n{guide}\n\nSample English text: {text}\n\nTranslated text: {translation}"}]
         )
         revisions = chat_completion['choices'][0]['message']['content']
+
+    # Check if any problems were found
+    if revisions.strip().lower() == "no problem found":
+        click.echo("No problems found.")
+        return None
 
     click.echo(f"Change:\n\n{revisions}\n")
 

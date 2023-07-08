@@ -76,7 +76,15 @@ def improve(guide_path, dictionary_path, text, n, model, embeddings_model):
 
     # Revise the language guide
     for i in range(n):
-        guide = improve_language(guide, dictionary, model, embeddings_model, text)
+        # Try to improve the language guide
+        improved_guide = improve_language(guide, dictionary, model, embeddings_model, text)
+
+        # Stop if no problems were found
+        if improved_guide is None:
+            break
+
+        # Update the language guide
+        guide = improved_guide
 
     # Save the improved guide to a file
     with open(guide_path, "w") as file:
@@ -114,8 +122,12 @@ def translate(guide_path, dictionary_path, text, model, embedding_model):
     else:
         dictionary = {}
 
-    # Improve the language guide using the English text
-    guide = improve_language(guide, dictionary, model, embedding_model, text)
+    # Try to improve the language guide using the English text
+    improved_guide = improve_language(guide, dictionary, model, embedding_model, text)
+
+    # Update the language guide
+    if improved_guide is not None:
+        guide = improved_guide
 
     # Add any missing words to the dictionary
     related_words = create_dictionary_for_text(guide, text, dictionary, model, embedding_model)
