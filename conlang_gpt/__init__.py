@@ -152,15 +152,36 @@ def translate(guide_path, dictionary_path, text, model, embedding_model):
         guide = file.read()
 
     # Load the dictionary
-    with open(dictionary_path, "r") as file:
-        reader = csv.reader(file)
+    if os.path.exists(dictionary_path):
+        with open(dictionary_path, "r") as file:
+            reader = csv.reader(file)
 
-        # Skip the header row
-        next(reader)
+            # Skip the header row
+            next(reader)
 
-        # Load the dictionary
-        dictionary = {row[0]: row[1] for row in reader}
+            # Load the dictionary
+            dictionary = {row[0]: row[1] for row in reader}
+    else:
+        dictionary = {}
+
+    # Improve the language guide using the English text
+    guide = improve_language(guide, dictionary, model, embedding_model, text)
+
+    # Add any missing words to the dictionary
+    related_words = create_dictionary_for_text(guide, text, dictionary, model, embedding_model)
+    dictionary = merge_dictionaries(dictionary, related_words, embedding_model)
 
     # Translate the text
     translation = translate_text(text, guide, dictionary, model, embedding_model)
     click.echo(translation)
+
+    # Save the updated guide
+    with open(guide_path, "w") as file:
+        file.write(guide)
+
+    # Save the updated dictionary
+    with open(dictionary_path, "w") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Word", "Translation"])
+        for word in dictionary:
+            writer.writerow([word, dictionary[word]])
