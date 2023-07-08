@@ -227,6 +227,7 @@ def create_dictionary_for_text(guide, text, existing_dictionary, model, embeddin
     # Parse the generated words
     reader = csv.reader(response.splitlines())
     header = next(reader)
+    header = [column.strip() for column in header]
     if header != ["Word", "English Translation"]:
         raise Exception(f"Invalid response. Expected a CSV document with two rows: Word and Translation. Received: {response}")
 
@@ -242,6 +243,10 @@ def create_dictionary_for_text(guide, text, existing_dictionary, model, embeddin
             first, rest = word.split(".", 1)
             if first.isdigit():
                 word = rest.strip()
+
+        # Remove any trailing whitespace
+        word = word.strip()
+        translation = translation.strip()
 
         # Add the word to the dictionary
         words[word] = translation
