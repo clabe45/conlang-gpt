@@ -187,7 +187,15 @@ def create_dictionary(guide, count, model, embeddings_model) -> dict:
     if header != ["Word", "English Translation"]:
         raise Exception(f"Invalid response. Expected a CSV document with two rows: Word and Translation. Received: {response}")
 
-    words = {row[0]: row[1] for row in reader}
+    words = {}
+    for row in reader:
+        # Extract the word and translation
+        if len(row) != 2:
+            raise Exception(f"Invalid response. Expected row to have two columns: Word and Translation. Received: {row}")
+        word, translation = row
+
+        # Add the word to the dictionary
+        words[word] = translation
 
     if len(words) != count:
         click.echo(click.style(f"Warning: {len(words)} words were generated, but {count} were requested.", fg="yellow"))
