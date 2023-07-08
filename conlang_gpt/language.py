@@ -145,7 +145,7 @@ def reduce_dictionary(words, embeddings_model):
     words_to_remove = set()
     for word_a, embedding_a in word_embeddings.items():
         for word_b, embedding_b in word_embeddings.items():
-            if word_a != word_b and cosine_similarity(embedding_a, embedding_b) > 0.95:
+            if word_a != word_b and cosine_similarity(embedding_a, embedding_b) > 0.99:
                 click.echo(click.style(f"Removed {word_b} because it is similar to {word_a}.", dim=True))
                 words_to_remove.add(word_b)
 
@@ -218,7 +218,7 @@ def merge_dictionaries(a, b, embeddings_model):
         if a_word not in a or b_word not in b:
             continue
 
-        if similarity > 0.95:
+        if similarity > 0.99:
             if len(b_word) < len(a_word):
                 click.echo(click.style(f"Removing {a_word} because it is too similar to {b_word}.", dim=True))
                 del a[a_word]
