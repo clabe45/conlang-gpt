@@ -229,7 +229,7 @@ def create_dictionary_for_text(guide, text, existing_dictionary, model, embeddin
     header = next(reader)
     header = [column.strip() for column in header]
     if header != ["Word", "English Translation"]:
-        raise Exception(f"Invalid response. Expected a CSV document with two rows: Word and Translation. Received: {response}")
+        raise Exception(f"Invalid response. Expected a CSV document with two rows: Word and English Translation. Received: {response}")
 
     words = {}
     for row in reader:
