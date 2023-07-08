@@ -100,7 +100,7 @@ def generate_english_text(model):
 def improve_language(guide, model, mode):
     click.echo(click.style(f"Improving language using {model}...", dim=True))
 
-    if mode == "basic":
+    if mode == "simple":
         # Identify problems with the language
         chat_completion = complete_chat(
             model=model,
@@ -125,7 +125,7 @@ def improve_language(guide, model, mode):
         )
         revisions = chat_completion['choices'][0]['message']['content']
     else:
-        raise Exception("Invalid mode. Please set the mode to 'basic' or 'example'.")
+        raise Exception("Invalid mode. Please set the mode to 'simple' or 'example'.")
 
     click.echo(f"Change:\n\n{revisions}\n")
 
