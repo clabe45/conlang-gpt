@@ -209,14 +209,16 @@ def create_dictionary_for_text(guide, text, existing_dictionary, model, embeddin
 
     # Get related words from the existing dictionary
     related_words = _get_related_words(text, existing_dictionary, embeddings_model)
+    formatted_related_words = "\n".join([f"{word}: {existing_dictionary[word]}" for word in related_words])
 
     # Generate words
     if len(related_words) > 0:
+        click.echo(f"Related words:\n\n{formatted_related_words}\n")
         chat_completion = complete_chat(
             model=model,
             temperature=0.9,
             messages=[
-                {"role": "user", "content": f"Create all the words required to translate the following text into the constructed language outlined below. Your response should be a CSV document with two columns: Word and English Translation.\n\nOriginal language guide:\n\n{guide}\n\nText to translate:\n\n{text}\n\nPotentially related words:\n\n{related_words}"}
+                {"role": "user", "content": f"Create all the words required to translate the following text into the constructed language outlined below. Your response should be a CSV document with two columns: Word and English Translation.\n\nOriginal language guide:\n\n{guide}\n\nText to translate:\n\n{text}\n\nPotentially related words:\n\n{formatted_related_words}"}
             ],
         )
         response = chat_completion['choices'][0]['message']['content']
