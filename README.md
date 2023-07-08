@@ -143,9 +143,11 @@ Usage: conlang translate [OPTIONS]
 
 Options:
   --guide TEXT
+  --dictionary TEXT
   --text TEXT
-  --model TEXT  OpenAI model to use
-  --help        Show this message and exit.
+  --model TEXT            OpenAI model to use
+  --embedding-model TEXT  OpenAI model to use for word embeddings
+  --help                  Show this message and exit.
 ```
 
 ### `conlang dictionary` (experimental)

@@ -133,15 +133,27 @@ def text():
 
 @text.command()
 @click.option("--guide", prompt="Enter the filename of the language guide")
+@click.option("--dictionary", prompt="Enter the filename of the dictionary")
 @click.option("--text", prompt="Enter the text to translate")
 @click.option("--model", default="gpt-3.5-turbo-16k", help="OpenAI model to use")
-def translate(guide, text, model):
+@click.option("--embedding-model", default="text-embedding-ada-002", help="OpenAI model to use for word embeddings")
+def translate(guide, dictionary, text, model, embedding_model):
     """Translate text to or from a constructed language."""
 
     # Load the beginner's guide
     with open(guide, "r") as file:
         guide = file.read()
 
+    # Load the dictionary
+    with open(dictionary, "r") as file:
+        reader = csv.reader(file)
+
+        # Skip the header row
+        next(reader)
+
+        # Load the dictionary
+        dictionary = {row[0]: row[1] for row in reader}
+
     # Translate the text
-    translation = translate_text(text, guide, model)
+    translation = translate_text(text, guide, dictionary, model, embedding_model)
     click.echo(translation)

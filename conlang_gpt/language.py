@@ -8,13 +8,74 @@ import click
 from .openai import complete_chat, get_embedding
 
 
-def translate_text(text, language_guide, model):
+def _get_embeddings(text, embeddings_model):
+    """Retrieve and cache the embeddings for some text."""
+
+    # Load the cached word embeddings
+    if os.path.exists(f".conlang/cache/embeddings/{embeddings_model}.pkl"):
+        with open(f".conlang/cache/embeddings/{embeddings_model}.pkl", "rb") as f:
+            embeddings = pickle.load(f)
+    else:
+        embeddings = {}
+
+    # Calculate the embeddings if they are not cached
+    if text not in embeddings:
+        embeddings[text] = get_embedding(text, embeddings_model)
+
+        # Cache the embeddings
+        if not os.path.exists(".conlang/cache/embeddings"):
+            os.makedirs(".conlang/cache/embeddings")
+        with open(f".conlang/cache/embeddings/{embeddings_model}.pkl", "wb") as f:
+            pickle.dump(embeddings, f)
+
+    return embeddings[text]
+
+def _get_related_words(text, dictionary, embeddings_model, max_words):
+    """Get the most related words from the dictionary."""
+
+    click.echo(click.style(f"Getting the most relevant words from the dictionary...", dim=True))
+
+    # Validate the number of words to return
+    if max_words > len(dictionary):
+        raise ValueError("The number of words to return cannot be greater than the number of words in the dictionary.")
+
+    # Get the embeddings for the text
+    text_embeddings = _get_embeddings(text, embeddings_model)
+
+    # Calculate the cosine similarity between the text and each word in the dictionary
+    word_similarities = {}
+    for word in dictionary:
+        word_embeddings = _get_embeddings(word, embeddings_model)
+        simularity = cosine_similarity(text_embeddings, word_embeddings)
+
+        # Only include words with a simularity greater than 0.8
+        if simularity > 0.8:
+            word_similarities[word] = simularity
+
+    # Sort the words by similarity
+    related_words = sorted(word_similarities, key=word_similarities.get, reverse=True)
+
+    # Return the most similar words
+    if len(related_words) > max_words:
+        return related_words[:max_words]
+    else:
+        return related_words
+
+def translate_text(text, language_guide, dictionary, model, embeddings_model):
     """Translate text into a constructed language."""
 
+    # Get the most related words from the dictionary
+    # The longer the text, the more words we want to return
+    max_words = min(10, int(len(text) / 2.5))
+    related_words = _get_related_words(text, dictionary, embeddings_model, max_words)
+    formatted_related_words = "\n".join([f"- {word}: {dictionary[word]}" for word in related_words])
+    click.echo(click.style(f"Most related words:\n\n{formatted_related_words}", dim=True))
+
+    # Translate the text
     click.echo(click.style(f"Translating text using {model}...", dim=True))
     chat_completion = complete_chat(
         model=model,
-        messages=[{"role": "user", "content": f"Translate the text below from or into the following constructed language. Explain how you arrived at the translation.\n\nLanguage guide:\n\n{language_guide}\n\nText to translate:\n\n{text}"}]
+        messages=[{"role": "user", "content": f"Translate the text below from or into the following constructed language. Explain how you arrived at the translation.\n\nLanguage guide:\n\n{language_guide}\n\nPotentially-related words:\n\n{formatted_related_words}\n\nText to translate:\n\n{text}"}]
     )
 
     translation = chat_completion['choices'][0]['message']['content']
@@ -111,35 +172,13 @@ def modify_language(guide, changes, model):
 
     return improved_guide
 
-def _get_word_embeddings(word, embeddings_model):
-    """Retrieve and cache the embeddings for a word."""
-
-    # Load the cached word embeddings
-    if os.path.exists(f".conlang/cache/embeddings/{embeddings_model}.pkl"):
-        with open(f".conlang/cache/embeddings/{embeddings_model}.pkl", "rb") as f:
-            word_embeddings = pickle.load(f)
-    else:
-        word_embeddings = {}
-
-    # Calculate the word embeddings if they are not cached
-    if word not in word_embeddings:
-        word_embeddings[word] = get_embedding(word, embeddings_model)
-
-        # Cache the word embeddings
-        if not os.path.exists(".conlang/cache/embeddings"):
-            os.makedirs(".conlang/cache/embeddings")
-        with open(f".conlang/cache/embeddings/{embeddings_model}.pkl", "wb") as f:
-            pickle.dump(word_embeddings, f)
-
-    return word_embeddings[word]
-
 def reduce_dictionary(words, embeddings_model):
     """Remove similar words from a dictionary."""
 
     click.echo(click.style(f"Removing similar words using {embeddings_model}...", dim=True))
 
     # Retrieve the embeddings for each word
-    word_embeddings = {word: _get_word_embeddings(word, embeddings_model) for word in words}
+    word_embeddings = {word: _get_embeddings(word, embeddings_model) for word in words}
 
     # Remove similar words
     words_to_remove = set()
@@ -215,8 +254,8 @@ def merge_dictionaries(a, b, embeddings_model):
     """Merge two vocabulary dictionaries, removing similar words."""
 
     # Retrieve the embeddings for each word
-    a_embeddings = {word: _get_word_embeddings(word, embeddings_model) for word in a.keys()}
-    b_embeddings = {word: _get_word_embeddings(word, embeddings_model) for word in b.keys()}
+    a_embeddings = {word: _get_embeddings(word, embeddings_model) for word in a.keys()}
+    b_embeddings = {word: _get_embeddings(word, embeddings_model) for word in b.keys()}
 
     # Calculate the cosine similarity between each pair of words
     a = dict(a)
