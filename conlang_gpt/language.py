@@ -176,7 +176,7 @@ def create_dictionary(guide, count, model, embeddings_model) -> dict:
         model=model,
         temperature=0.9,
         messages=[
-            {"role": "user", "content": f"Generate {count} random vocabulary words related to '{topic}' for the following constructed language. Format your response as a CSV document with two rows: Word and English Translation.\n\nLanguage guide:\n\n{guide}"}
+            {"role": "user", "content": f"Generate {count} single random vocabulary words related to '{topic}' for the following constructed language. Format your response as a CSV document with two rows: Word and English Translation.\n\nLanguage guide:\n\n{guide}"}
         ]
     )
 
