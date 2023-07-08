@@ -136,7 +136,7 @@ def improve_language(guide, dictionary, model, embeddings_model, text=None):
         revisions = chat_completion['choices'][0]['message']['content']
 
     # Check if any problems were found
-    if revisions.strip().lower() == "no problem found":
+    if "No problem found" in revisions or "No problems found" in revisions:
         click.echo("No problems found.")
         return None
 
