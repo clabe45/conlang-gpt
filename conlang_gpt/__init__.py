@@ -105,11 +105,6 @@ def add(guide, output, text, model, embeddings_model):
     with open(guide, "r") as file:
         guide = file.read()
 
-    # Generate words
-    words = create_dictionary_for_text(guide, text, model, embeddings_model)
-    click.echo(click.style(f"Generated {len(words)} words.", dim=True))
-
-    # Save the words to a CSV file, appending to the file if it already exists
     # Load existing words
     if os.path.exists(output):
         with open(output, "r") as file:
@@ -122,6 +117,10 @@ def add(guide, output, text, model, embeddings_model):
             existing_words = {row[0]: row[1] for row in reader}
     else:
         existing_words = {}
+
+    # Generate words
+    words = create_dictionary_for_text(guide, text, existing_words, model, embeddings_model)
+    click.echo(click.style(f"Generated {len(words)} words.", dim=True))
 
     # Combine the existing words with the new words, removing similar words
     click.echo(click.style("Removing similar words...", dim=True))

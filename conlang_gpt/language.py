@@ -30,14 +30,13 @@ def _get_embeddings(text, embeddings_model):
 
     return embeddings[text]
 
-def _get_related_words(text, dictionary, embeddings_model, max_words):
+def _get_related_words(text, dictionary, embeddings_model):
     """Get the most related words from the dictionary."""
 
     click.echo(click.style(f"Getting the most relevant words from the dictionary...", dim=True))
 
-    # Validate the number of words to return
-    if max_words > len(dictionary):
-        raise ValueError("The number of words to return cannot be greater than the number of words in the dictionary.")
+    # The longer the text, the more words we want to return
+    max_words = min(10, int(len(text) / 2.5))
 
     # Get the embeddings for the text
     text_embeddings = _get_embeddings(text, embeddings_model)
@@ -65,9 +64,7 @@ def translate_text(text, language_guide, dictionary, model, embeddings_model):
     """Translate text into a constructed language."""
 
     # Get the most related words from the dictionary
-    # The longer the text, the more words we want to return
-    max_words = min(10, int(len(text) / 2.5))
-    related_words = _get_related_words(text, dictionary, embeddings_model, max_words)
+    related_words = _get_related_words(text, dictionary, embeddings_model)
 
     # Translate the text
     click.echo(click.style(f"Translating text using {model}...", dim=True))
@@ -202,20 +199,34 @@ def reduce_dictionary(words, embeddings_model):
 
     return words
 
-def create_dictionary_for_text(guide, text, model, embeddings_model) -> dict:
+def create_dictionary_for_text(guide, text, existing_dictionary, model, embeddings_model) -> dict:
     """Generate words for a constructed language."""
 
     click.echo(click.style(f"Generating words using {model}...", dim=True))
 
+    # Get related words from the existing dictionary
+    related_words = _get_related_words(text, existing_dictionary, embeddings_model)
+
     # Generate words
-    chat_completion = complete_chat(
-        model=model,
-        temperature=0.9,
-        messages=[
-            {"role": "user", "content": f"Create all the words required to translate the following text into the constructed language outlined below. Your response should be a CSV document with two columns: Word and English Translation.\n\nOriginal language guide:\n\n{guide}\n\nText to translate:\n\n{text}"}
-        ],
-    )
-    response = chat_completion['choices'][0]['message']['content']
+    if len(related_words) > 0:
+        chat_completion = complete_chat(
+            model=model,
+            temperature=0.9,
+            messages=[
+                {"role": "user", "content": f"Create all the words required to translate the following text into the constructed language outlined below. Your response should be a CSV document with two columns: Word and English Translation.\n\nOriginal language guide:\n\n{guide}\n\nText to translate:\n\n{text}\n\nPotentially related words:\n\n{related_words}"}
+            ],
+        )
+        response = chat_completion['choices'][0]['message']['content']
+
+    else:
+        chat_completion = complete_chat(
+            model=model,
+            temperature=0.9,
+            messages=[
+                {"role": "user", "content": f"Create all the words required to translate the following text into the constructed language outlined below. Your response should be a CSV document with two columns: Word and English Translation.\n\nOriginal language guide:\n\n{guide}\n\nText to translate:\n\n{text}"}
+            ],
+        )
+        response = chat_completion['choices'][0]['message']['content']
 
     # Parse the generated words
     reader = csv.reader(response.splitlines())
