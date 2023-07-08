@@ -205,7 +205,7 @@ def create_dictionary(guide, mode, count, model, embeddings_model) -> dict:
             model=model,
             temperature=0.9,
             messages=[
-                {"role": "user", "content": f"Generate {count} single random vocabulary words for the following constructed language. Format your response as a CSV document with two columns: Word and English Translation.\n\nLanguage guide:\n\n{guide}"}
+                {"role": "user", "content": f"Generate {count} single random vocabulary words for the following constructed language. Format your response as a CSV document with two columns: Word and English Translation. Quote all cells in the CSV document.\n\nLanguage guide:\n\n{guide}"}
             ]
         )
         response = chat_completion['choices'][0]['message']['content']
@@ -228,7 +228,7 @@ def create_dictionary(guide, mode, count, model, embeddings_model) -> dict:
             model=model,
             temperature=0.9,
             messages=[
-                {"role": "user", "content": f"Generate {count} single random vocabulary words related to '{topic}' for the following constructed language. Format your response as a CSV document with two columns: Word and English Translation.\n\nLanguage guide:\n\n{guide}"}
+                {"role": "user", "content": f"Generate {count} single random vocabulary words related to '{topic}' for the following constructed language. Format your response as a CSV document with two columns: Word and English Translation. Quote all cells in the CSV document.\n\nLanguage guide:\n\n{guide}"}
             ]
         )
         response = chat_completion['choices'][0]['message']['content']
