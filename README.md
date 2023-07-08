@@ -90,12 +90,15 @@ Usage: conlang guide improve [OPTIONS]
 Options:
   --input TEXT
   --output TEXT
+  --dictionary TEXT
   --mode [simple|example]  Mode to use. Defaults to simple. Set to the
-                          experimental 'example' mode to include a new random
-                          translation in each revision.
-  -n INTEGER              Number of revisions to perform. Defaults to 1.
-  --model TEXT            OpenAI model to use. Defaults to gpt-3.5-turbo-16k.
-  --help                  Show this message and exit.
+                           experimental 'example' mode to include a new random
+                           translation in each revision.
+  -n INTEGER               Number of revisions to perform. Defaults to 1.
+  --model TEXT             OpenAI model to use. Defaults to gpt-3.5-turbo-16k.
+  --embeddings-model TEXT  OpenAI model to use for word embeddings. Defaults
+                           to text-embedding-ada-002.
+  --help                   Show this message and exit.
 ```
 
 #### `conlang guide modify`

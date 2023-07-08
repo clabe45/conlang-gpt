@@ -105,7 +105,7 @@ def generate_english_text(model):
     english_text = chat_completion['choices'][0]['message']['content']
     return english_text
 
-def improve_language(guide, model, mode):
+def improve_language(guide, dictionary, model, embeddings_model, mode):
     click.echo(click.style(f"Improving language using {model}...", dim=True))
 
     if mode == "simple":
@@ -121,7 +121,7 @@ def improve_language(guide, model, mode):
     elif mode == "example":
         # Attempt to translate a random English sentence
         english_text = generate_english_text(model)
-        translation = translate_text(english_text, guide, model)
+        translation = translate_text(english_text, dictionary, guide, model, embeddings_model)
         click.echo(f"Sample English text:\n\n{english_text}\n")
         click.echo(f"Translated text:\n\n{translation}\n")
 
