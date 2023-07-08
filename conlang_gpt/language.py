@@ -202,47 +202,20 @@ def reduce_dictionary(words, embeddings_model):
 
     return words
 
-def create_dictionary(guide, mode, count, model, embeddings_model) -> dict:
+def create_dictionary_for_text(guide, text, model, embeddings_model) -> dict:
     """Generate words for a constructed language."""
 
-    if mode == "simple":
-        # Generate words
-        click.echo(click.style(f"Generating words using {model}...", dim=True))
-        chat_completion = complete_chat(
-            model=model,
-            temperature=0.9,
-            messages=[
-                {"role": "user", "content": f"Generate {count} single random vocabulary words for the following constructed language. Format your response as a CSV document with two columns: Word and English Translation. Quote all cells in the CSV document.\n\nLanguage guide:\n\n{guide}"}
-            ]
-        )
-        response = chat_completion['choices'][0]['message']['content']
+    click.echo(click.style(f"Generating words using {model}...", dim=True))
 
-    elif mode == "topic":
-        # Choose a random topic
-        click.echo(click.style(f"Choosing a random topic using {model}...", dim=True))
-        chat_completion = complete_chat(
-            model=model,
-            temperature=0.9,
-            messages=[
-                {"role": "system", "content": "You are a writing assistant who virtually always suggests a different topic to write about."},
-                {"role": "user", "content": f"Respond with a random topic to write about."},
-            ]
-        )
-        topic = chat_completion['choices'][0]['message']['content']
-
-        # Generate words
-        click.echo(click.style(f"Generating words related to '{topic}' using {model}...", dim=True))
-        chat_completion = complete_chat(
-            model=model,
-            temperature=0.9,
-            messages=[
-                {"role": "user", "content": f"Generate {count} single random vocabulary words related to '{topic}' for the following constructed language. Format your response as a CSV document with two columns: Word and English Translation. Quote all cells in the CSV document.\n\nLanguage guide:\n\n{guide}"}
-            ]
-        )
-        response = chat_completion['choices'][0]['message']['content']
-
-    else:
-        raise Exception("Invalid mode. Please set the mode to 'simple' or 'topic'.")
+    # Generate words
+    chat_completion = complete_chat(
+        model=model,
+        temperature=0.9,
+        messages=[
+            {"role": "user", "content": f"Create all the words required to translate the following text into the constructed language outlined below. Your response should be a CSV document with two columns: Word and English Translation.\n\nOriginal language guide:\n\n{guide}\n\nText to translate:\n\n{text}"}
+        ],
+    )
+    response = chat_completion['choices'][0]['message']['content']
 
     # Parse the generated words
     reader = csv.reader(response.splitlines())
@@ -265,9 +238,6 @@ def create_dictionary(guide, mode, count, model, embeddings_model) -> dict:
 
         # Add the word to the dictionary
         words[word] = translation
-
-    if len(words) != count:
-        click.echo(click.style(f"Warning: {len(words)} words were generated, but {count} were requested.", fg="yellow"))
 
     # Remove similar words
     words = reduce_dictionary(words, embeddings_model)

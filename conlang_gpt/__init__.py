@@ -3,7 +3,7 @@ import os
 
 import click
 
-from .language import generate_language, modify_language, improve_language, create_dictionary, merge_dictionaries, translate_text
+from .language import generate_language, modify_language, improve_language, create_dictionary_for_text, merge_dictionaries, translate_text
 
 @click.group()
 def cli():
@@ -93,11 +93,10 @@ def dictionary():
 @dictionary.command()
 @click.option("--guide", prompt="Enter the filename of the language guide")
 @click.option("--output", prompt="Enter the path to the CSV file to save the words to (will be created if it doesn't exist)")
-@click.option("--mode", default="simple", type=click.Choice(["simple", "topic"]), help="Mode to use. Defaults to simple. Set to topic to generate words based on a random topic.")
-@click.option("-n", default=15, help="Number of words to generate. Defaults to 15.")
+@click.option("--text", prompt="Enter an English sentence to generate words for")
 @click.option("--model", default="gpt-3.5-turbo-16k", help="OpenAI model to use. Defaults to gpt-3.5-turbo-16k.")
 @click.option("--embeddings-model", default="text-embedding-ada-002", help="OpenAI model to use for word embeddings. Defaults to text-embedding-ada-002.")
-def add(guide, output, mode, n, model, embeddings_model):
+def add(guide, output, text, model, embeddings_model):
     """Generate words in the language (experimental)."""
 
     click.echo(click.style("This feature is experimental. It may not work as expected.", fg="yellow"))
@@ -107,7 +106,7 @@ def add(guide, output, mode, n, model, embeddings_model):
         guide = file.read()
 
     # Generate words
-    words = create_dictionary(guide, mode, n, model, embeddings_model)
+    words = create_dictionary_for_text(guide, text, model, embeddings_model)
     click.echo(click.style(f"Generated {len(words)} words.", dim=True))
 
     # Save the words to a CSV file, appending to the file if it already exists
