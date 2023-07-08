@@ -194,6 +194,12 @@ def create_dictionary(guide, count, model, embeddings_model) -> dict:
             raise Exception(f"Invalid response. Expected row to have two columns: Word and Translation. Received: {row}")
         word, translation = row
 
+        # If the word starts with a number (e.g., "1. hello"), remove the number
+        if "." in word:
+            first, rest = word.split(".", 1)
+            if first.isdigit():
+                word = rest.strip()
+
         # Add the word to the dictionary
         words[word] = translation
 
