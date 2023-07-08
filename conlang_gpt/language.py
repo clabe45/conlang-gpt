@@ -80,14 +80,14 @@ def translate_text(text, language_guide, dictionary, model, embeddings_model):
         click.echo(click.style(f"Most related words:\n\n{formatted_related_words}", dim=True))
         chat_completion = complete_chat(
             model=model,
-            messages=[{"role": "user", "content": f"Translate the text below from or into the following constructed language. Explain how you arrived at the translation.\n\nLanguage guide:\n\n{language_guide}\n\nPotentially-related words:\n\n{formatted_related_words}\n\nText to translate:\n\n{text}"}]
+            messages=[{"role": "user", "content": f"Translate the text below from or into the following constructed language. Explain how you arrived at the translation. Only use words found in either the guide or the list below.\n\nLanguage guide:\n\n{language_guide}\n\nPotentially-related words:\n\n{formatted_related_words}\n\nText to translate:\n\n{text}"}]
         )
         translation = chat_completion['choices'][0]['message']['content']
 
     else:
         chat_completion = complete_chat(
             model=model,
-            messages=[{"role": "user", "content": f"Translate the text below from or into the following constructed language. Explain how you arrived at the translation.\n\nLanguage guide:\n\n{language_guide}\n\nNo relevant words from dictionary found.\n\nText to translate:\n\n{text}"}]
+            messages=[{"role": "user", "content": f"Translate the text below from or into the following constructed language. Explain how you arrived at the translation. Only use words found in the guide.\n\nNo relevant words from dictionary found.\n\nLanguage guide:\n\n{language_guide}\n\nText to translate:\n\n{text}"}]
         )
         translation = chat_completion['choices'][0]['message']['content']
 
