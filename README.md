@@ -137,7 +137,7 @@ Translates text between any language ChatGPT was trained on to and the conlang. 
 
 ```
 $ conlang translate --help
-Usage: conlang translate [OPTIONS]
+Usage: conlang text translate [OPTIONS]
 
   Translate text to or from a constructed language.
 
