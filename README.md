@@ -79,7 +79,7 @@ Options:
 
 #### `conlang guide improve`
 
-Attempts to automatically improve the language and saves the resulting guide to a file. Supports two modes - `basic` and `example`. In basic mode, a random flaw with the language is identified and fixed. In example mode, a random English sentence is generated, translated to the conlang and used to identify and fix a problem with the language.
+Attempts to automatically improve the language and saves the resulting guide to a file. Supports two modes - `simple` and `example`. In simple mode, a random flaw with the language is identified and fixed. In example mode, a random English sentence is generated, translated to the conlang and used to identify and fix a problem with the language.
 
 ```
 $ conlang guide improve --help
@@ -90,7 +90,7 @@ Usage: conlang guide improve [OPTIONS]
 Options:
   --input TEXT
   --output TEXT
-  --mode [basic|example]  Mode to use. Defaults to basic. Set to the
+  --mode [simple|example]  Mode to use. Defaults to simple. Set to the
                           experimental 'example' mode to include a new random
                           translation in each revision.
   -n INTEGER              Number of revisions to perform. Defaults to 1.
