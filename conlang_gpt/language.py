@@ -205,7 +205,6 @@ def reduce_dictionary(words, embeddings_model):
 def create_dictionary(guide, mode, count, model, embeddings_model) -> dict:
     """Generate words for a constructed language."""
 
-    # Choose a random topic
     if mode == "simple":
         # Generate words
         click.echo(click.style(f"Generating words using {model}...", dim=True))
@@ -219,6 +218,7 @@ def create_dictionary(guide, mode, count, model, embeddings_model) -> dict:
         response = chat_completion['choices'][0]['message']['content']
 
     elif mode == "topic":
+        # Choose a random topic
         click.echo(click.style(f"Choosing a random topic using {model}...", dim=True))
         chat_completion = complete_chat(
             model=model,
