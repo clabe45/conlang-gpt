@@ -171,12 +171,12 @@ def create_dictionary(guide, count, model, embeddings_model) -> dict:
     topic = chat_completion['choices'][0]['message']['content']
 
     # Generate words
-    click.echo(click.style(f"Generating words about {topic} using {model}...", dim=True))
+    click.echo(click.style(f"Generating words related to '{topic}' using {model}...", dim=True))
     chat_completion = complete_chat(
         model=model,
         temperature=0.9,
         messages=[
-            {"role": "user", "content": f"Generate {count} random vocabulary words about {topic} for the following constructed language. Format your response as a CSV document with two rows: Word and English Translation.\n\nLanguage guide:\n\n{guide}"}
+            {"role": "user", "content": f"Generate {count} random vocabulary words related to '{topic}' for the following constructed language. Format your response as a CSV document with two rows: Word and English Translation.\n\nLanguage guide:\n\n{guide}"}
         ]
     )
 
