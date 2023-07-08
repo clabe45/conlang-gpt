@@ -32,7 +32,6 @@ Options:
   --help  Show this message and exit.
 
 Commands:
-  dictionary
   guide
   text
 ```
@@ -149,35 +148,4 @@ Options:
   --model TEXT            OpenAI model to use
   --embedding-model TEXT  OpenAI model to use for word embeddings
   --help                  Show this message and exit.
-```
-
-### `conlang dictionary` (experimental)
-
-#### Overview
-
-```
-$ conlang dictionary --help
-Usage: conlang text [OPTIONS] COMMAND [ARGS]...
-
-Options:
-  --help  Show this message and exit.
-
-Commands:
-  translate  Translate text to or from a constructed language.
-```
-
-#### `conlang dictionary add`
-
-```
-$ conlang dictionary add --help
-Usage: conlang dictionary add [OPTIONS]
-
-  Generate words in the language (experimental).
-
-Options:
-  --guide TEXT
-  --dictionary TEXT
-  -n INTEGER     Number of words to generate. Defaults to 15.
-  --model TEXT   OpenAI model to use. Defaults to gpt-3.5-turbo-16k.
-  --help         Show this message and exit.
 ```

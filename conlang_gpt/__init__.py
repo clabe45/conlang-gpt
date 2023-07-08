@@ -85,56 +85,6 @@ def improve(guide_path, dictionary_path, text, n, model, embeddings_model):
     click.echo(click.style(f"Language improved and saved to {guide_path} successfully.", dim=True))
 
 @cli.group()
-def dictionary():
-    pass
-
-@dictionary.command()
-@click.option("--guide", "guide_path", prompt="Enter the filename of the language guide")
-@click.option("--dictionary", "dictionary_path", prompt="Enter the path to the CSV file to save the words to (will be created if it doesn't exist)")
-@click.option("--text", prompt="Enter an English sentence to generate words for")
-@click.option("--model", default="gpt-3.5-turbo-16k", help="OpenAI model to use. Defaults to gpt-3.5-turbo-16k.")
-@click.option("--embeddings-model", default="text-embedding-ada-002", help="OpenAI model to use for word embeddings. Defaults to text-embedding-ada-002.")
-def add(guide_path, dictionary_path, text, model, embeddings_model):
-    """Generate words in the language (experimental)."""
-
-    click.echo(click.style("This feature is experimental. It may not work as expected.", fg="yellow"))
-
-    # Load the beginner's guide
-    with open(guide_path, "r") as file:
-        guide = file.read()
-
-    # Load existing words
-    if os.path.exists(dictionary_path):
-        with open(output, "r") as file:
-            reader = csv.reader(file)
-
-            # Skip the header row
-            next(reader)
-
-            # Load existing words
-            existing_words = {row[0]: row[1] for row in reader}
-    else:
-        existing_words = {}
-
-    # Generate words
-    words = create_dictionary_for_text(guide, text, existing_words, model, embeddings_model)
-    click.echo(click.style(f"Generated {len(words)} words.", dim=True))
-
-    # Combine the existing words with the new words, removing similar words
-    click.echo(click.style("Removing similar words...", dim=True))
-    all_words = merge_dictionaries(existing_words, words, embeddings_model)
-
-    # Sort the words alphabetically
-    all_words = {word: all_words[word] for word in sorted(all_words)}
-
-    # Save the updated word list
-    with open(dictionary_path, "w") as file:
-        writer = csv.writer(file)
-        writer.writerow(["Word", "Translation"])
-        for word in all_words:
-            writer.writerow([word, all_words[word]])
-
-@cli.group()
 def text():
     pass
 
