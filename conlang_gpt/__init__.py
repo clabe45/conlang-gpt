@@ -122,11 +122,15 @@ def translate(guide_path, dictionary_path, text, model, embedding_model):
     else:
         dictionary = {}
 
-    # Try to improve the language guide using the English text
-    improved_guide = improve_language(guide, dictionary, model, embedding_model, text)
+    while True:
+        # Try to improve the language guide using the English text
+        improved_guide = improve_language(guide, dictionary, model, embedding_model, text)
 
-    # Update the language guide
-    if improved_guide is not None:
+        # Stop if no problems were found
+        if improved_guide is None:
+            break
+
+        # Update the language guide
         guide = improved_guide
 
     # Add any missing words to the dictionary
