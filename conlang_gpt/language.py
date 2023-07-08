@@ -41,11 +41,18 @@ def _get_related_words(text, dictionary, embeddings_model):
     # Get the embeddings for the text
     text_embeddings = _get_embeddings(text, embeddings_model)
 
-    # Calculate the cosine similarity between the text and each word in the dictionary
+    # Calculate the cosine similarity between the text and each word in the dictionary (both the word and the English translation)
     word_similarities = {}
-    for word in dictionary:
+    for word, translation in dictionary.items():
+        # Calculate the cosine similarity between the text and the word
         word_embeddings = _get_embeddings(word, embeddings_model)
-        simularity = cosine_similarity(text_embeddings, word_embeddings)
+        word_simularity = cosine_similarity(text_embeddings, word_embeddings)
+
+        # Calculate the cosine similarity between the text and the translation
+        translation_embeddings = _get_embeddings(translation, embeddings_model)
+        translation_simularity = cosine_similarity(text_embeddings, translation_embeddings)
+
+        simularity = max(word_simularity, translation_simularity)
 
         # Only include words with a simularity greater than 0.85
         if simularity > 0.85:
