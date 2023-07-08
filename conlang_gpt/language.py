@@ -68,17 +68,25 @@ def translate_text(text, language_guide, dictionary, model, embeddings_model):
     # The longer the text, the more words we want to return
     max_words = min(10, int(len(text) / 2.5))
     related_words = _get_related_words(text, dictionary, embeddings_model, max_words)
-    formatted_related_words = "\n".join([f"- {word}: {dictionary[word]}" for word in related_words])
-    click.echo(click.style(f"Most related words:\n\n{formatted_related_words}", dim=True))
 
     # Translate the text
     click.echo(click.style(f"Translating text using {model}...", dim=True))
-    chat_completion = complete_chat(
-        model=model,
-        messages=[{"role": "user", "content": f"Translate the text below from or into the following constructed language. Explain how you arrived at the translation.\n\nLanguage guide:\n\n{language_guide}\n\nPotentially-related words:\n\n{formatted_related_words}\n\nText to translate:\n\n{text}"}]
-    )
+    if related_words:
+        formatted_related_words = "\n".join([f"- {word}: {dictionary[word]}" for word in related_words])
+        click.echo(click.style(f"Most related words:\n\n{formatted_related_words}", dim=True))
+        chat_completion = complete_chat(
+            model=model,
+            messages=[{"role": "user", "content": f"Translate the text below from or into the following constructed language. Explain how you arrived at the translation.\n\nLanguage guide:\n\n{language_guide}\n\nPotentially-related words:\n\n{formatted_related_words}\n\nText to translate:\n\n{text}"}]
+        )
+        translation = chat_completion['choices'][0]['message']['content']
 
-    translation = chat_completion['choices'][0]['message']['content']
+    else:
+        chat_completion = complete_chat(
+            model=model,
+            messages=[{"role": "user", "content": f"Translate the text below from or into the following constructed language. Explain how you arrived at the translation.\n\nLanguage guide:\n\n{language_guide}\n\nText to translate:\n\n{text}"}]
+        )
+        translation = chat_completion['choices'][0]['message']['content']
+
     return translation
 
 def generate_english_text(model):
