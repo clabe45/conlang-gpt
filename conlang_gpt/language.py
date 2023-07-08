@@ -165,7 +165,7 @@ def create_dictionary(guide, count, model, embeddings_model) -> dict:
         temperature=0.9,
         messages=[
             {"role": "system", "content": "You are a writing assistant who virtually always suggests a different topic to write about."},
-            {"role": "user", "content": f"Enter a unique, random topic to write about:"}
+            {"role": "user", "content": f"Respond with a random topic to write about."},
         ]
     )
     topic = chat_completion['choices'][0]['message']['content']
