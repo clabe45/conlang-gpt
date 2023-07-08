@@ -117,7 +117,7 @@ def improve_language(guide, dictionary, model, embeddings_model, text=None):
 
     else:
         # Attempt to translate the provided English sentence
-        translation = translate_text(text, dictionary, guide, model, embeddings_model)
+        translation = translate_text(text, guide, dictionary, model, embeddings_model)
         click.echo(f"Translated text:\n\n{translation}\n")
 
         # Identify problems with the language using the translated text as an example/reference
