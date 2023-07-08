@@ -36,7 +36,7 @@ def _get_related_words(text, dictionary, embeddings_model):
     click.echo(click.style(f"Getting the most relevant words from the dictionary...", dim=True))
 
     # The longer the text, the more words we want to return
-    max_words = min(10, int(len(text) / 2.5))
+    max_words = min(len(dictionary), int(len(text) / 2.5))
 
     # Get the embeddings for the text
     text_embeddings = _get_embeddings(text, embeddings_model)
