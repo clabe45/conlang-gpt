@@ -102,10 +102,10 @@ def generate_english_text(model):
     english_text = chat_completion['choices'][0]['message']['content']
     return english_text
 
-def improve_language(guide, dictionary, model, embeddings_model, mode):
+def improve_language(guide, dictionary, model, embeddings_model, text=None):
     click.echo(click.style(f"Improving language using {model}...", dim=True))
 
-    if mode == "simple":
+    if text is None:
         # Identify problems with the language
         chat_completion = complete_chat(
             model=model,
@@ -115,22 +115,18 @@ def improve_language(guide, dictionary, model, embeddings_model, mode):
         )
         revisions = chat_completion['choices'][0]['message']['content']
 
-    elif mode == "example":
-        # Attempt to translate a random English sentence
-        english_text = generate_english_text(model)
-        translation = translate_text(english_text, dictionary, guide, model, embeddings_model)
-        click.echo(f"Sample English text:\n\n{english_text}\n")
+    else:
+        # Attempt to translate the provided English sentence
+        translation = translate_text(text, dictionary, guide, model, embeddings_model)
         click.echo(f"Translated text:\n\n{translation}\n")
 
         # Identify problems with the language using the translated text as an example/reference
         chat_completion = complete_chat(
             model=model,
             temperature=0.1,
-            messages=[{"role": "user", "content": f"Please identify one flaw or point of confusion with the language outlined below along with specific, detailed, actionable steps to fix it. I included a sample translation to give you more context.\n\nLanguage guide:\n\n{guide}\n\nSample English text: {english_text}\n\nTranslated text: {translation}"}]
+            messages=[{"role": "user", "content": f"Please identify one flaw or point of confusion with the language outlined below along with specific, detailed, actionable steps to fix it. I included a sample translation to give you more context.\n\nLanguage guide:\n\n{guide}\n\nSample English text: {text}\n\nTranslated text: {translation}"}]
         )
         revisions = chat_completion['choices'][0]['message']['content']
-    else:
-        raise Exception("Invalid mode. Please set the mode to 'simple' or 'example'.")
 
     click.echo(f"Change:\n\n{revisions}\n")
 

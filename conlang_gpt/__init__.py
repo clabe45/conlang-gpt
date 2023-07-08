@@ -52,11 +52,11 @@ def modify(guide_path, changes, model):
 @guide.command()
 @click.option("--guide", "guide_path", prompt="Enter the filename of the language guide")
 @click.option("--dictionary", "dictionary_path", required=False, help="Enter the filename of the dictionary to use in 'example' mode.")
-@click.option("--mode", default="simple", type=click.Choice(["simple", "example"]), help="Mode to use. Defaults to simple. Set to the experimental 'example' mode to include a new random translation in each revision.")
+@click.option("--text", required=False)
 @click.option("-n", default=1, help="Number of revisions to perform. Defaults to 1.")
 @click.option("--model", default="gpt-3.5-turbo-16k", help="OpenAI model to use. Defaults to gpt-3.5-turbo-16k.")
 @click.option("--embeddings-model", default="text-embedding-ada-002", help="OpenAI model to use for word embeddings in 'example' mode. Defaults to text-embedding-ada-002.")
-def improve(guide_path, dictionary_path, mode, n, model, embeddings_model):
+def improve(guide_path, dictionary_path, text, n, model, embeddings_model):
     """Automatically improve the language."""
 
     # Custom option validation
@@ -67,8 +67,8 @@ def improve(guide_path, dictionary_path, mode, n, model, embeddings_model):
         if dictionary_path is not None:
             raise click.BadParameter("The --dictionary option is not allowed in 'simple' mode.")
 
-    if mode == "example":
-        click.echo(click.style("Example mode is experimental. It may not work as expected.", fg="yellow"))
+    if text:
+        click.echo(click.style("The --text option is experimental. It may not work as expected.", fg="yellow"))
 
     # Load the beginner's guide
     with open(guide_path, "r") as file:
@@ -76,7 +76,7 @@ def improve(guide_path, dictionary_path, mode, n, model, embeddings_model):
 
     # Revise the language guide
     for i in range(n):
-        guide = improve_language(guide, dictionary, model, embeddings_model, mode)
+        guide = improve_language(guide, dictionary, model, embeddings_model, text)
 
     # Save the improved guide to a file
     with open(guide_path, "w") as file:
