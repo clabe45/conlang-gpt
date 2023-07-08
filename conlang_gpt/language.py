@@ -80,7 +80,7 @@ def translate_text(text, language_guide, dictionary, model, embeddings_model):
     else:
         chat_completion = complete_chat(
             model=model,
-            messages=[{"role": "user", "content": f"Translate the text below from or into the following constructed language. Explain how you arrived at the translation.\n\nLanguage guide:\n\n{language_guide}\n\nText to translate:\n\n{text}"}]
+            messages=[{"role": "user", "content": f"Translate the text below from or into the following constructed language. Explain how you arrived at the translation.\n\nLanguage guide:\n\n{language_guide}\n\nNo relevant words from dictionary found.\n\nText to translate:\n\n{text}"}]
         )
         translation = chat_completion['choices'][0]['message']['content']
 
@@ -111,7 +111,7 @@ def improve_language(guide, dictionary, model, embeddings_model, text=None):
             model=model,
             temperature=0.5,
             presence_penalty=0.5,
-            messages=[{"role": "user", "content": f"Please identify one flaw, contradiction or point of confusion with the language outlined below along with specific, detailed, actionable steps to fix it.\n\nLanguage guide:\n\n{guide}"}]
+            messages=[{"role": "user", "content": f"Please identify one flaw, contradiction or point of confusion with the language outlined below along with specific, detailed, actionable steps to fix it. Note that a dictionary will be created separately.\n\nLanguage guide:\n\n{guide}"}]
         )
         revisions = chat_completion['choices'][0]['message']['content']
 
@@ -135,7 +135,7 @@ def improve_language(guide, dictionary, model, embeddings_model, text=None):
         model=model,
         temperature=0.1,
         messages=[
-            {"role": "user", "content": f"Improve the following constructed language to address the problem described below. Your response should be an exhaustive reference sheet describing the new language. Assume the reader did not read the original reference sheet and that they have no prior experience using the language.\n\nOriginal language guide:\n\n{guide}\n\nMake these changes:\n\n{revisions}"}
+            {"role": "user", "content": f"Improve the following constructed language to address the problem described below. Your response should be an exhaustive reference sheet describing the new language's rules. Assume the reader did not read the original reference sheet and that they have no prior experience using the language. Note that a dictionary is provided separately.\n\nOriginal language guide:\n\n{guide}\n\nMake these changes:\n\n{revisions}"}
         ]
     )
     improved_guide = chat_completion['choices'][0]['message']['content']
@@ -166,7 +166,7 @@ def modify_language(guide, changes, model):
         model=model,
         temperature=0.1,
         messages=[
-            {"role": "user", "content": f"Make the following changes to the constructed language outlined below. Your response should be an exhaustive reference sheet describing the new language. Assume the reader did not read the original reference sheet and that they have no prior experience using the language.\n\nOriginal language guide:\n\n{guide}\n\nMake these changes:\n\n{changes}"}
+            {"role": "user", "content": f"Make the following changes to the constructed language outlined below. Your response should be an exhaustive reference sheet describing the new language's rules. Assume the reader did not read the original reference sheet and that they have no prior experience using the language. Note that a dictionary is provided separately.\n\nOriginal language guide:\n\n{guide}\n\nMake these changes:\n\n{changes}"}
         ]
     )
     improved_guide = chat_completion['choices'][0]['message']['content']
