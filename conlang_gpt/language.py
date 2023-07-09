@@ -322,9 +322,9 @@ def load_dictionary(dictionary_path):
     return dictionary
 
 def save_dictionary(dictionary, dictionary_path):
-    # Save the dictionary
+    # Save the dictionary in alphabetical order
     with open(dictionary_path, "w") as file:
         writer = csv.writer(file)
         writer.writerow(["Word", "Translation"])
-        for word in dictionary:
+        for word in sorted(dictionary.keys()):
             writer.writerow([word, dictionary[word]])
