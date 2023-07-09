@@ -286,7 +286,7 @@ def create_dictionary_for_text(
             messages=[
                 {
                     "role": "user",
-                    "content": f"Create all the words required to translate the following text into the constructed language outlined below. Your response should be a CSV document with two columns: Word and English Translation.\n\nOriginal language guide:\n\n{guide}\n\nText to translate (either from or to the conlang):\n\n{text}\n\nPotentially related words:\n\n{formatted_related_words}",
+                    "content": f"Create all the words required to translate the following text into the constructed language outlined below. Your response should be a CSV document with two columns: Conlang and English.\n\nOriginal language guide:\n\n{guide}\n\nText to translate (either from or to the conlang):\n\n{text}\n\nPotentially related words:\n\n{formatted_related_words}",
                 }
             ],
         )
@@ -299,7 +299,7 @@ def create_dictionary_for_text(
             messages=[
                 {
                     "role": "user",
-                    "content": f"Create all the words required to translate the following text into the constructed language outlined below. Your response should be a CSV document with two columns: Word and English Translation.\n\nOriginal language guide:\n\n{guide}\n\nText to translate (either from or to the conlang):\n\n{text}",
+                    "content": f"Create all the words required to translate the following text into the constructed language outlined below. Your response should be a CSV document with two columns: Conlang and English.\n\nOriginal language guide:\n\n{guide}\n\nText to translate (either from or to the conlang):\n\n{text}",
                 }
             ],
         )
@@ -309,9 +309,9 @@ def create_dictionary_for_text(
     reader = csv.reader(response.splitlines())
     header = next(reader)
     header = [column.strip() for column in header]
-    if header != ["Word", "English Translation"]:
+    if header != ["Conlang", "English"]:
         raise Exception(
-            f"Invalid response. Expected a CSV document with two rows: Word and English Translation. Received: {response}"
+            f"Invalid response. Expected a CSV document with two rows: Conlang and English. Received: {response}"
         )
 
     words = {}
