@@ -304,3 +304,27 @@ def merge_dictionaries(a, b, embeddings_model):
     merged = {**a, **b}
 
     return merged
+
+def load_dictionary(dictionary_path):
+     # Load the dictionary
+    if os.path.exists(dictionary_path):
+        with open(dictionary_path, "r") as file:
+            reader = csv.reader(file)
+
+            # Skip the header row
+            next(reader)
+
+            # Load the dictionary
+            dictionary = {row[0]: row[1] for row in reader}
+    else:
+        dictionary = {}
+
+    return dictionary
+
+def save_dictionary(dictionary, dictionary_path):
+    # Save the dictionary
+    with open(dictionary_path, "w") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Word", "Translation"])
+        for word in dictionary:
+            writer.writerow([word, dictionary[word]])

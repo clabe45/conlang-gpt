@@ -1,9 +1,8 @@
 import csv
-import os
 
 import click
 
-from .language import generate_language, modify_language, improve_language, create_dictionary_for_text, merge_dictionaries, translate_text
+from .language import generate_language, modify_language, improve_language, create_dictionary_for_text, merge_dictionaries, load_dictionary, save_dictionary, translate_text
 
 @click.group()
 def cli():
@@ -110,17 +109,7 @@ def translate(guide_path, dictionary_path, text, model, embedding_model):
         guide = file.read()
 
     # Load the dictionary
-    if os.path.exists(dictionary_path):
-        with open(dictionary_path, "r") as file:
-            reader = csv.reader(file)
-
-            # Skip the header row
-            next(reader)
-
-            # Load the dictionary
-            dictionary = {row[0]: row[1] for row in reader}
-    else:
-        dictionary = {}
+    dictionary = load_dictionary(dictionary_path)
 
     while True:
         # Try to improve the language guide using the English text
@@ -146,8 +135,4 @@ def translate(guide_path, dictionary_path, text, model, embedding_model):
         file.write(guide)
 
     # Save the updated dictionary
-    with open(dictionary_path, "w") as file:
-        writer = csv.writer(file)
-        writer.writerow(["Word", "Translation"])
-        for word in dictionary:
-            writer.writerow([word, dictionary[word]])
+    save_dictionary(dictionary, dictionary_path)
