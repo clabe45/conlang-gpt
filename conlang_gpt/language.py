@@ -123,7 +123,7 @@ def improve_language(guide, dictionary, model, embeddings_model, text=None):
         revisions = chat_completion['choices'][0]['message']['content']
 
     else:
-        # Attempt to translate the provided English sentence
+        # Attempt to translate the provided text
         translation = translate_text(text, guide, dictionary, model, embeddings_model)
         click.echo(f"Translated text:\n\n{translation}\n")
 
@@ -131,7 +131,7 @@ def improve_language(guide, dictionary, model, embeddings_model, text=None):
         chat_completion = complete_chat(
             model=model,
             temperature=0.1,
-            messages=[{"role": "user", "content": f"If the language outlined below has any flaws, contradictions or points of confusion, please identify one and provide specific, detailed, actionable steps to fix it. Otherwise, respond with \"No problem found\". I included a sample translation to give you more context.\n\nLanguage guide:\n\n{guide}\n\nSample English text: {text}\n\nTranslated text: {translation}"}]
+            messages=[{"role": "user", "content": f"If the language outlined below has any flaws, contradictions or points of confusion, please identify one and provide specific, detailed, actionable steps to fix it. Otherwise, respond with \"No problem found\". I included a sample translation to give you more context.\n\nLanguage guide:\n\n{guide}\n\nOriginal text: {text}\n\nTranslated text: {translation}"}]
         )
         revisions = chat_completion['choices'][0]['message']['content']
 
