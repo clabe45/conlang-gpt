@@ -72,7 +72,7 @@ Usage: conlang guide create [OPTIONS]
 Options:
   --design-goals TEXT
   --guide TEXT
-  --model TEXT         OpenAI model to use. Defaults to gpt-3.5-turbo-16k.
+  --model TEXT         OpenAI model to use. Defaults to gpt-3.5-turbo.
   --help               Show this message and exit.
 ```
 
@@ -93,7 +93,7 @@ Options:
                            experimental 'example' mode to include a new random
                            translation in each revision.
   -n INTEGER               Number of revisions to perform. Defaults to 1.
-  --model TEXT             OpenAI model to use. Defaults to gpt-3.5-turbo-16k.
+  --model TEXT             OpenAI model to use. Defaults to gpt-3.5-turbo.
   --embeddings-model TEXT  OpenAI model to use for word embeddings. Defaults
                            to text-embedding-ada-002.
   --help                   Show this message and exit.
@@ -112,7 +112,7 @@ Usage: conlang guide modify [OPTIONS]
 Options:
   --guide TEXT
   --changes TEXT
-  --model TEXT         OpenAI model to use. Defaults to gpt-3.5-turbo-16k.
+  --model TEXT         OpenAI model to use. Defaults to gpt-3.5-turbo.
   --help               Show this message and exit.
 ```
 

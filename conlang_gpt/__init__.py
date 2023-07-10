@@ -31,8 +31,8 @@ def guide():
 )
 @click.option(
     "--model",
-    default="gpt-3.5-turbo-16k",
-    help="OpenAI model to use. Defaults to gpt-3.5-turbo-16k.",
+    default="gpt-3.5-turbo",
+    help="OpenAI model to use. Defaults to gpt-3.5-turbo.",
 )
 def create(design_goals, guide_path, model):
     """Create a constructed language."""
@@ -58,8 +58,8 @@ def create(design_goals, guide_path, model):
 @click.option("--changes", prompt="Enter the changes to apply to the language guide")
 @click.option(
     "--model",
-    default="gpt-3.5-turbo-16k",
-    help="OpenAI model to use. Defaults to gpt-3.5-turbo-16k.",
+    default="gpt-3.5-turbo",
+    help="OpenAI model to use. Defaults to gpt-3.5-turbo.",
 )
 def modify(guide_path, changes, model):
     """Make specific changes to the language."""
@@ -96,8 +96,8 @@ def modify(guide_path, changes, model):
 @click.option("-n", default=1, help="Number of revisions to perform. Defaults to 1.")
 @click.option(
     "--model",
-    default="gpt-3.5-turbo-16k",
-    help="OpenAI model to use. Defaults to gpt-3.5-turbo-16k.",
+    default="gpt-3.5-turbo",
+    help="OpenAI model to use. Defaults to gpt-3.5-turbo.",
 )
 @click.option(
     "--embeddings-model",
@@ -167,7 +167,7 @@ def text():
     "--dictionary", "dictionary_path", prompt="Enter the filename of the dictionary"
 )
 @click.option("--text", prompt="Enter the text to translate")
-@click.option("--model", default="gpt-3.5-turbo-16k", help="OpenAI model to use")
+@click.option("--model", default="gpt-3.5-turbo", help="OpenAI model to use")
 @click.option(
     "--embedding-model",
     default="text-embedding-ada-002",
