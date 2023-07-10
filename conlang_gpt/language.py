@@ -286,7 +286,7 @@ def create_dictionary_for_text(
             messages=[
                 {
                     "role": "user",
-                    "content": f"Create all the words required to translate the following text into the constructed language outlined below. Your response should be a CSV document with two columns: Conlang and English.\n\nOriginal language guide:\n\n{guide}\n\nText to translate (either from or to the conlang):\n\n{text}\n\nPotentially related words:\n\n{formatted_related_words}",
+                    "content": f"Create all the words required to translate the following text into the constructed language outlined below. Your response should be a CSV document with two columns: Conlang and English. Each row should have exactly two cells.\n\nOriginal language guide:\n\n{guide}\n\nText to translate (either from or to the conlang):\n\n{text}\n\nPotentially related words:\n\n{formatted_related_words}",
                 }
             ],
         )
@@ -299,7 +299,7 @@ def create_dictionary_for_text(
             messages=[
                 {
                     "role": "user",
-                    "content": f"Create all the words required to translate the following text into the constructed language outlined below. Your response should be a CSV document with two columns: Conlang and English.\n\nOriginal language guide:\n\n{guide}\n\nText to translate (either from or to the conlang):\n\n{text}",
+                    "content": f"Create all the words required to translate the following text into the constructed language outlined below. Your response should be a CSV document with two columns: Conlang and English. Each row should have exactly two cells.\n\nOriginal language guide:\n\n{guide}\n\nText to translate (either from or to the conlang):\n\n{text}",
                 }
             ],
         )
