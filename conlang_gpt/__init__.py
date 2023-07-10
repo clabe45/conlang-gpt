@@ -19,12 +19,7 @@ def cli():
     pass
 
 
-@cli.group()
-def guide():
-    pass
-
-
-@guide.command()
+@cli.command()
 @click.option("--design-goals", prompt="Enter the design goals of the language")
 @click.option(
     "--guide", "guide_path", prompt="Enter the filename to save the language guide to"
@@ -51,7 +46,7 @@ def create(design_goals, guide_path, model):
     )
 
 
-@guide.command()
+@cli.command()
 @click.option(
     "--guide", "guide_path", prompt="Enter the filename of the language guide"
 )
@@ -82,7 +77,7 @@ def modify(guide_path, changes, model):
     )
 
 
-@guide.command()
+@cli.command()
 @click.option(
     "--guide", "guide_path", prompt="Enter the filename of the language guide"
 )
@@ -154,12 +149,7 @@ def improve(guide_path, dictionary_path, text, n, model, embeddings_model):
     )
 
 
-@cli.group()
-def text():
-    pass
-
-
-@text.command()
+@cli.command()
 @click.option(
     "--guide", "guide_path", prompt="Enter the filename of the language guide"
 )

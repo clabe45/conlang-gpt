@@ -32,8 +32,10 @@ Options:
   --help  Show this message and exit.
 
 Commands:
-  guide
-  text
+  create     Create a constructed language.
+  improve    Automatically improve the language.
+  modify     Make specific changes to the language.
+  translate  Translate text to or from a constructed language.
 ```
 
 Before running any of them, set the `OPENAI_API_KEY` environment variable (keep the space in front to exclude the command from your history):
@@ -42,30 +44,13 @@ Before running any of them, set the `OPENAI_API_KEY` environment variable (keep 
  export OPENAI_API_KEY=sk...
 ```
 
-### `conlang guide`
-
-#### Overview
-
-```
-$ conlang guide --help
-Usage: conlang guide [OPTIONS] COMMAND [ARGS]...
-
-Options:
-  --help  Show this message and exit.
-
-Commands:
-  create   Create a constructed language.
-  improve  Automatically improve the language.
-  modify   Make specific changes to the language.
-```
-
-#### `conlang guide create`
+### `conlang create`
 
 Creates a guide for a new language and writes it to a file.
 
 ```
-$ conlang guide create --help
-Usage: conlang guide create [OPTIONS]
+$ conlang create --help
+Usage: conlang create [OPTIONS]
 
   Create a constructed language.
 
@@ -76,68 +61,52 @@ Options:
   --help               Show this message and exit.
 ```
 
-#### `conlang guide improve`
+### `conlang improve`
 
 Attempts to automatically improve the language and saves the resulting guide to a file. Supports two modes - `simple` and `example`. In simple mode, a random flaw with the language is identified and fixed. In example mode, a random English sentence is generated, translated to the conlang and used to identify and fix a problem with the language.
 
 ```
-$ conlang guide improve --help
-Usage: conlang guide improve [OPTIONS]
+$ conlang improve --help
+Usage: conlang improve [OPTIONS]
 
   Automatically improve the language.
 
 Options:
   --guide TEXT
-  --dictionary TEXT
-  --mode [simple|example]  Mode to use. Defaults to simple. Set to the
-                           experimental 'example' mode to include a new random
-                           translation in each revision.
+  --dictionary TEXT        Enter the filename of the dictionary to use in
+                           'example' mode.
+  --text TEXT
   -n INTEGER               Number of revisions to perform. Defaults to 1.
   --model TEXT             OpenAI model to use. Defaults to gpt-3.5-turbo.
-  --embeddings-model TEXT  OpenAI model to use for word embeddings. Defaults
-                           to text-embedding-ada-002.
+  --embeddings-model TEXT  OpenAI model to use for word embeddings in
+                           'example' mode. Defaults to text-embedding-ada-002.
   --help                   Show this message and exit.
 ```
 
-#### `conlang guide modify`
+### `conlang modify`
 
 Makes a specific change to the language and updates the guide.
 
 ```
-$ conlang guide modify --help
-Usage: conlang guide modify [OPTIONS]
+$ conlang modify --help
+Usage: conlang modify [OPTIONS]
 
   Make specific changes to the language.
 
 Options:
   --guide TEXT
   --changes TEXT
-  --model TEXT         OpenAI model to use. Defaults to gpt-3.5-turbo.
-  --help               Show this message and exit.
+  --model TEXT    OpenAI model to use. Defaults to gpt-3.5-turbo.
+  --help          Show this message and exit.
 ```
 
-### `conlang text`
-
-#### Overview
-
-```
-$ conlang text --help
-Usage: conlang text [OPTIONS] COMMAND [ARGS]...
-
-Options:
-  --help  Show this message and exit.
-
-Commands:
-  translate  Translate text to or from a constructed language.
-```
-
-#### `conlang text translate`
+### `conlang translate`
 
 Translates text between any language ChatGPT was trained on to and the conlang. The language of the input text is automatically detected and used to dermine which language to translate to.
 
 ```
 $ conlang translate --help
-Usage: conlang text translate [OPTIONS]
+Usage: conlang translate [OPTIONS]
 
   Translate text to or from a constructed language.
 
