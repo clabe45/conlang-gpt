@@ -76,14 +76,15 @@ Usage: conlang improve [OPTIONS]
 
 Options:
   --guide TEXT
-  --dictionary TEXT        Enter the filename of the dictionary to use in
-                           'example' mode.
+  --dictionary TEXT         Enter the filename of the dictionary to use in
+                            'example' mode.
   --text TEXT
-  -n INTEGER               Number of revisions to perform. Defaults to 1.
-  --model TEXT             OpenAI model to use. Defaults to gpt-3.5-turbo.
-  --embeddings-model TEXT  OpenAI model to use for word embeddings in
-                           'example' mode. Defaults to text-embedding-ada-002.
-  --help                   Show this message and exit.
+  --max-iterations INTEGER  Max number of revisions to perform. Defaults to 1.
+  --model TEXT              OpenAI model to use. Defaults to gpt-3.5-turbo.
+  --embeddings-model TEXT   OpenAI model to use for word embeddings in
+                            'example' mode. Defaults to text-embedding-
+                            ada-002.
+  --help                    Show this message and exit.
 ```
 
 ### `conlang modify`

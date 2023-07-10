@@ -88,7 +88,11 @@ def modify(guide_path, changes, model):
     help="Enter the filename of the dictionary to use in 'example' mode.",
 )
 @click.option("--text", required=False)
-@click.option("-n", default=1, help="Number of revisions to perform. Defaults to 1.")
+@click.option(
+    "--max-iterations",
+    default=1,
+    help="Max number of revisions to perform. Defaults to 1.",
+)
 @click.option(
     "--model",
     default="gpt-3.5-turbo",
@@ -99,7 +103,7 @@ def modify(guide_path, changes, model):
     default="text-embedding-ada-002",
     help="OpenAI model to use for word embeddings in 'example' mode. Defaults to text-embedding-ada-002.",
 )
-def improve(guide_path, dictionary_path, text, n, model, embeddings_model):
+def improve(guide_path, dictionary_path, text, max_iterations, model, embeddings_model):
     """Automatically improve the language."""
 
     # Custom option validation
@@ -125,7 +129,7 @@ def improve(guide_path, dictionary_path, text, n, model, embeddings_model):
         guide = file.read()
 
     # Revise the language guide
-    for i in range(n):
+    for i in range(max_iterations):
         # Try to improve the language guide
         improved_guide = improve_language(
             guide, dictionary, model, embeddings_model, text
