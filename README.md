@@ -8,7 +8,7 @@ Conlang GPT is a command line tool for creating, modifying and using constructed
 | --- | --- |
 | Automatically generate specifications for written or spoken languages | :white_check_mark: Stable |
 | Automatically or manually improve languages iteratively | :white_check_mark: Stable |
-| Generate vocabulary | :sparkles: Experimental |
+| Generate vocabulary lazily | :white_check_mark: Stable |
 | Translate any text to or from the generated languages | :white_check_mark: Stable |
 | Support for all of OpenAI's chat models | :white_check_mark: Stable |
 
