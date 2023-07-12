@@ -186,7 +186,7 @@ def improve_language(guide, dictionary, model, embeddings_model, text=None):
         messages=[
             {
                 "role": "user",
-                "content": f"Improve the following constructed language to address the problem described below. Your response should be an exhaustive reference sheet describing the new language's rules. Assume the reader did not read the original reference sheet and that they have no prior experience using the language. Note that a dictionary is provided separately.\n\nOriginal language guide:\n\n{guide}\n\nMake these changes:\n\n{revisions}",
+                "content": f"Improve the following constructed language to address the problem described below. Your response should be a reference sheet describing the new language's rules. Assume the reader did not read the original reference sheet and that they have no prior experience using the language. Note that a dictionary is provided separately.\n\nOriginal language guide:\n\n{guide}\n\nMake these changes:\n\n{revisions}",
             }
         ],
     )
@@ -206,7 +206,7 @@ def generate_language(design_goals, model):
         messages=[
             {
                 "role": "user",
-                "content": f"Create a constructed language with the following design goals:\n\n{design_goals}\n\nYour response should be an exhaustive reference sheet including all the language's rules. Assume the reader has no prior experience using the language.",
+                "content": f"Create a constructed language with the following design goals:\n\n{design_goals}\n\nYour response should be a reference sheet including all the language's rules. Assume the reader has no prior experience using the language.",
             }
         ],
     )
@@ -226,7 +226,7 @@ def modify_language(guide, changes, model):
         messages=[
             {
                 "role": "user",
-                "content": f"Make the following changes to the constructed language outlined below. Your response should be an exhaustive reference sheet describing the new language's rules. Assume the reader did not read the original reference sheet and that they have no prior experience using the language. Note that a dictionary is provided separately.\n\nOriginal language guide:\n\n{guide}\n\nMake these changes:\n\n{changes}",
+                "content": f"Make the following changes to the constructed language outlined below. Your response should be a reference sheet describing the new language's rules. Assume the reader did not read the original reference sheet and that they have no prior experience using the language. Note that a dictionary is provided separately.\n\nOriginal language guide:\n\n{guide}\n\nMake these changes:\n\n{changes}",
             }
         ],
     )
