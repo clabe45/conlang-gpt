@@ -8,6 +8,30 @@ import click
 from .openai import complete_chat, get_embedding
 
 
+class LanguageError(Exception):
+    """Abstract base class for errors related to a constructed language."""
+
+    pass
+
+
+class DictionaryError(LanguageError):
+    """Exception raised when there is an error with a dictionary."""
+
+    pass
+
+
+class CreateDictionaryError(DictionaryError):
+    """Exception raised when a dictionary cannot be created."""
+
+    pass
+
+
+class ParseDictionaryError(DictionaryError):
+    """Exception raised when a dictionary cannot be parsed."""
+
+    pass
+
+
 def _get_embeddings(text, embeddings_model):
     """Retrieve and cache the embeddings for some text."""
 
@@ -308,15 +332,13 @@ def create_dictionary_for_text(
     header = next(reader)
     header = [column.strip() for column in header]
     if header != ["Conlang", "English"]:
-        raise Exception(
-            f"Invalid response. Expected a CSV document with two rows: Conlang and English. Received: {response}"
-        )
+        raise CreateDictionaryError(response)
 
     words = {}
     for row in reader:
         # Extract the word and translation
         if len(row) != 2:
-            raise Exception(
+            raise ParseDictionaryError(
                 f"Invalid response. Expected row to have two columns: Word and Translation. Received: {row}"
             )
         word, translation = row
