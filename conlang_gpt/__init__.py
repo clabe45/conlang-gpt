@@ -148,6 +148,9 @@ def improve(guide_path, dictionary_path, text, max_iterations, model, embeddings
     with open(guide_path, "r") as file:
         guide = file.read()
 
+    # Load the dictionary
+    dictionary = load_dictionary(dictionary_path)
+
     # Revise the language guide
     for i in range(max_iterations):
         # Try to improve the language guide
@@ -194,6 +197,9 @@ def improve(guide_path, dictionary_path, text, max_iterations, model, embeddings
     # Save the improved guide to a file
     with open(guide_path, "w") as file:
         file.write(guide)
+
+    # Save the new dictionary to a file
+    save_dictionary(dictionary, dictionary_path)
 
     click.echo(
         click.style(
