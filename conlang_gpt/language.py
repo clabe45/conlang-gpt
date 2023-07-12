@@ -282,7 +282,6 @@ def create_dictionary_for_text(
         click.echo(f"Related words:\n\n{formatted_related_words}\n")
         chat_completion = complete_chat(
             model=model,
-            temperature=0.9,
             messages=[
                 {
                     "role": "user",
@@ -295,7 +294,6 @@ def create_dictionary_for_text(
     else:
         chat_completion = complete_chat(
             model=model,
-            temperature=0.9,
             messages=[
                 {
                     "role": "user",
