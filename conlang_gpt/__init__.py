@@ -136,16 +136,6 @@ def modify(guide_path, dictionary_path, changes, model, embeddings_model):
 def improve(guide_path, dictionary_path, text, max_iterations, model, embeddings_model):
     """Automatically improve the language."""
 
-    # Custom option validation
-    if mode == "example":
-        if dictionary_path is None:
-            dictionary_path = click.prompt("Enter the filename of the dictionary")
-    else:
-        if dictionary_path is not None:
-            raise click.BadParameter(
-                "The --dictionary option is not allowed in 'simple' mode."
-            )
-
     if text:
         click.echo(
             click.style(
