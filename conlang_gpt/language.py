@@ -148,7 +148,7 @@ def improve_language(guide, dictionary, model, embeddings_model, text=None):
             messages=[
                 {
                     "role": "user",
-                    "content": f'If the language outlined below has any flaws, contradictions or points of confusion, please identify one and provide specific, detailed, actionable steps to fix it. Otherwise, respond with "No problem found". Note that a dictionary is provided separately.\n\nLanguage guide:\n\n{guide}',
+                    "content": f'If the language outlined below has any flaws, contradictions or points of confusion, please identify one and provide specific, detailed, actionable steps to fix it. Otherwise, respond with "No problem found" instead of the csv document. Note that a dictionary is provided separately.\n\nLanguage guide:\n\n{guide}',
                 }
             ],
         )
