@@ -90,8 +90,8 @@ def _get_related_words(text, dictionary, embeddings_model):
 
         simularity = max(word_simularity, translation_simularity)
 
-        # Only include words with a simularity greater than 0.8
-        if simularity > 0.8:
+        # Only include words with a simularity greater than 0.75
+        if simularity > 0.75:
             word_similarities[word] = simularity
 
     # Sort the words by similarity
