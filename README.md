@@ -49,7 +49,7 @@ Before running any of them, set the `OPENAI_API_KEY` environment variable (keep 
 
 ### `conlang create`
 
-Creates a guide for a new language and writes it to a file.
+Creates the first draft of a guide for a new language and writes it to a file. This purpose of the guide is to describe how to use the language, including grammar rules and phonetics.
 
 ```
 $ conlang create --help
