@@ -1,4 +1,5 @@
 import csv
+import io
 from openai.embeddings_utils import cosine_similarity
 import os
 import pickle
@@ -297,9 +298,14 @@ def create_dictionary_for_text(
 
     # Get related words from the existing dictionary
     related_words = _get_related_words(text, existing_dictionary, embeddings_model)
-    formatted_related_words = "\n".join(
-        [f"{word}: {existing_dictionary[word]}" for word in related_words]
-    )
+
+    # Format the related words as a CSV document
+    mutable_formatted_related_words = io.StringIO()
+    writer = csv.writer(mutable_formatted_related_words)
+    writer.writerow(["Conlang", "English"])
+    for word in related_words:
+        writer.writerow([word, existing_dictionary[word]])
+    formatted_related_words = mutable_formatted_related_words.getvalue()
 
     # Generate words
     if len(related_words) > 0:
