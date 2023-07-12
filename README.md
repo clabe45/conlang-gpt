@@ -12,7 +12,7 @@ Conlang GPT is a command line tool for creating, modifying and using constructed
 | Automatically or manually improve language specs iteratively | :sparkles: Alpha |
 | Translate any text to or from the generated languages | :sparkles: Alpha |
 | Generate vocabulary lazily | :sparkles: Alpha |
-| Automatically modify existing vocabulary | :white_large_square: Not yet implemented |
+| Automatically modify existing vocabulary | :sparkles: Alpha |
 | Support for all of OpenAI's chat models | :sparkles: Alpha |
 
 ## Installation
@@ -66,7 +66,7 @@ Options:
 
 ### `conlang improve`
 
-Attempts to automatically improve the language and saves the resulting guide to a file. Supports two modes - `simple` and `example`. In simple mode, a random flaw with the language is identified and fixed. In example mode, a random English sentence is generated, translated to the conlang and used to identify and fix a problem with the language.
+Attempts to automatically improve the language guide and dictionary. The resulting guide and dictionary are saved to the original input files. Supports two modes - `simple` and `example`. In simple mode, a random flaw with the language is identified and fixed. In example mode, a random English sentence is generated, translated to the conlang and used to identify and fix a problem with the language.
 
 ```
 $ conlang improve --help
@@ -89,7 +89,7 @@ Options:
 
 ### `conlang modify`
 
-Makes a specific change to the language and updates the guide.
+Makes a specific change to the language and updates the guide and dictionary.
 
 ```
 $ conlang modify --help
@@ -99,14 +99,18 @@ Usage: conlang modify [OPTIONS]
 
 Options:
   --guide TEXT
+  --dictionary TEXT        Enter the filename of the dictionary to use in
+                           'example' mode.
   --changes TEXT
-  --model TEXT    OpenAI model to use. Defaults to gpt-3.5-turbo.
-  --help          Show this message and exit.
+  --model TEXT             OpenAI model to use. Defaults to gpt-3.5-turbo.
+  --embeddings-model TEXT  OpenAI model to use for word embeddings in
+                           'example' mode. Defaults to text-embedding-ada-002.
+  --help                   Show this message and exit.
 ```
 
 ### `conlang translate`
 
-Translates text between any language ChatGPT was trained on to and the conlang. The language of the input text is automatically detected and used to dermine which language to translate to.
+Translates text between any language ChatGPT was trained on to and the conlang. The language of the input text is automatically detected and used to dermine which language to translate to. If any problems are encountered while translating, the guide and dictionary will be automatically fixed.
 
 ```
 $ conlang translate --help

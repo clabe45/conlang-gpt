@@ -27,6 +27,12 @@ class CreateDictionaryError(DictionaryError):
     pass
 
 
+class ImproveDictionaryError(DictionaryError):
+    """Exception raised when the dictionary cannot be updated."""
+
+    pass
+
+
 class ParseDictionaryError(DictionaryError):
     """Exception raised when a dictionary cannot be parsed."""
 
@@ -366,6 +372,94 @@ def create_dictionary_for_text(
     words = reduce_dictionary(words, embeddings_model)
 
     return words
+
+
+def improve_dictionary(dictionary, guide, model, embeddings_model, batch_size=25):
+    """Update the dictionary to match the guide by focusing on updating the words themselves instead of their translations."""
+
+    click.echo(click.style(f"Improving dictionary using {model}...", dim=True))
+
+    # Get the words to improve
+    words_to_improve = list(dictionary.keys())
+
+    # Improve the words
+    for i in range(0, len(words_to_improve), batch_size):
+        # Dump the batch to a csv string
+        mutable_batch_string = io.StringIO()
+        writer = csv.writer(mutable_batch_string)
+        writer.writerow(["Conlang", "English"])
+        for word in words_to_improve[i : i + batch_size]:
+            writer.writerow([word, dictionary[word]])
+        formatted_batch = mutable_batch_string.getvalue()
+
+        # Improve the words
+        chat_completion = complete_chat(
+            model=model,
+            messages=[
+                {
+                    "role": "user",
+                    "content": f'Ensure that the following words are correctly translated into the constructed language outlined below. If any of the words do not adhere to the guide below, update or remove them as you see fit. Your response should be a CSV document with two columns: Conlang and English. Each row should have exactly two cells. If the word list below is correct and complete, respond with "No problems found".\n\nLanguage guide:\n\n{guide}\n\nWords to improve:\n\n{formatted_batch}',
+                }
+            ],
+        )
+        response = chat_completion["choices"][0]["message"]["content"]
+
+        # Parse the generated words
+        if "No problems found" in response:
+            continue
+
+        # Extract the CSV document, unless the response is just a message
+        document = None
+        if "\n\n" in response:
+            click.echo(response)
+            for paragraph in response.split("\n\n"):
+                if paragraph.startswith("Conlang,English"):
+                    document = paragraph
+                    break
+            else:
+                raise ImproveDictionaryError(response)
+        else:
+            document = response
+
+        # Parse the CSV document
+        reader = csv.reader(document.splitlines())
+        header = next(reader)
+        header = [column.strip() for column in header]
+
+        # Parse the words
+        improved_batch = {}
+        for row in reader:
+            # Extract the word and translation
+            if len(row) != 2:
+                raise ParseDictionaryError(
+                    f"Invalid response. Expected row to have two columns: Word and Translation. Received: {row}"
+                )
+            word, translation = row
+
+            # If the word starts with a number (e.g., "1. hello"), remove the number
+            if "." in word:
+                first, rest = word.split(".", 1)
+                if first.isdigit():
+                    word = rest.strip()
+
+            # Remove any trailing whitespace
+            word = word.strip()
+            translation = translation.strip()
+
+            # Add the word to the batch
+            improved_batch[word] = translation
+
+        # Remove similar words
+        improved_batch = reduce_dictionary(improved_batch, embeddings_model)
+
+        # Remove the old batch from the dictionary
+        for word in words_to_improve[i : i + batch_size]:
+            del dictionary[word]
+
+        # Add the improved batch to the dictionary
+        dictionary = merge_dictionaries(dictionary, improved_batch, embeddings_model)
+
+    return dictionary
 
 
 def merge_dictionaries(a, b, embeddings_model):
