@@ -250,6 +250,7 @@ def improve_language(guide, dictionary, model, embeddings_model, text=None):
         chat_completion = complete_chat(
             model=model,
             temperature=0.1,
+            # TODO: Replace with `presence_penalty=0.1`
             frequency_penalty=0.1,
             messages=[
                 {
