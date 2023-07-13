@@ -86,7 +86,7 @@ Options:
                                 'example' mode.
   --text TEXT
   --max-iterations INTEGER      Max number of revisions to perform. Defaults
-                                to 1.
+                                to 5.
   --similarity-threshold FLOAT  Maximum similarity between two words to be
                                 considered the same. Defaults to 0.98.
   --model TEXT                  OpenAI model to use. Defaults to

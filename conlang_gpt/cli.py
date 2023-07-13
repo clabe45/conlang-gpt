@@ -83,8 +83,8 @@ def modify(
 @click.option("--text", required=False)
 @click.option(
     "--max-iterations",
-    default=1,
-    help="Max number of revisions to perform. Defaults to 1.",
+    default=5,
+    help="Max number of revisions to perform. Defaults to 5.",
 )
 @click.option(
     "--similarity-threshold",
