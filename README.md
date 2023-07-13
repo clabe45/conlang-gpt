@@ -76,15 +76,19 @@ Usage: conlang improve [OPTIONS]
 
 Options:
   --guide TEXT
-  --dictionary TEXT         Enter the filename of the dictionary to use in
-                            'example' mode.
+  --dictionary TEXT             Enter the filename of the dictionary to use in
+                                'example' mode.
   --text TEXT
-  --max-iterations INTEGER  Max number of revisions to perform. Defaults to 1.
-  --model TEXT              OpenAI model to use. Defaults to gpt-3.5-turbo.
-  --embeddings-model TEXT   OpenAI model to use for word embeddings in
-                            'example' mode. Defaults to text-embedding-
-                            ada-002.
-  --help                    Show this message and exit.
+  --max-iterations INTEGER      Max number of revisions to perform. Defaults
+                                to 1.
+  --similarity-threshold FLOAT  Maximum similarity between two words to be
+                                considered the same. Defaults to 0.98.
+  --model TEXT                  OpenAI model to use. Defaults to
+                                gpt-3.5-turbo.
+  --embeddings-model TEXT       OpenAI model to use for word embeddings in
+                                'example' mode. Defaults to text-embedding-
+                                ada-002.
+  --help                        Show this message and exit.
 ```
 
 ### `conlang modify`
@@ -99,13 +103,17 @@ Usage: conlang modify [OPTIONS]
 
 Options:
   --guide TEXT
-  --dictionary TEXT        Enter the filename of the dictionary to use in
-                           'example' mode.
+  --dictionary TEXT             Enter the filename of the dictionary to use in
+                                'example' mode.
   --changes TEXT
-  --model TEXT             OpenAI model to use. Defaults to gpt-3.5-turbo.
-  --embeddings-model TEXT  OpenAI model to use for word embeddings in
-                           'example' mode. Defaults to text-embedding-ada-002.
-  --help                   Show this message and exit.
+  --similarity-threshold FLOAT  Maximum similarity between two words to be
+                                considered the same. Defaults to 0.98.
+  --model TEXT                  OpenAI model to use. Defaults to
+                                gpt-3.5-turbo.
+  --embeddings-model TEXT       OpenAI model to use for word embeddings in
+                                'example' mode. Defaults to text-embedding-
+                                ada-002.
+  --help                        Show this message and exit.
 ```
 
 ### `conlang translate`
@@ -122,7 +130,9 @@ Options:
   --guide TEXT
   --dictionary TEXT
   --text TEXT
-  --model TEXT            OpenAI model to use
-  --embedding-model TEXT  OpenAI model to use for word embeddings
-  --help                  Show this message and exit.
+  --similarity-threshold FLOAT  Maximum similarity between two words to be
+                                considered the same. Defaults to 0.98.
+  --model TEXT                  OpenAI model to use
+  --embedding-model TEXT        OpenAI model to use for word embeddings
+  --help                        Show this message and exit.
 ```

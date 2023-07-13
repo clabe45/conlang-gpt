@@ -13,7 +13,9 @@ from ..language import (
 )
 
 
-def translate(guide_path, dictionary_path, text, model, embedding_model):
+def translate(
+    guide_path, dictionary_path, text, similarity_threshold, model, embedding_model
+):
     """Translate text to or from a constructed language."""
 
     # Load the beginner's guide
@@ -25,9 +27,11 @@ def translate(guide_path, dictionary_path, text, model, embedding_model):
 
     # Add any missing words to the dictionary
     related_words = create_dictionary_for_text(
-        guide, text, dictionary, model, embedding_model
+        guide, text, dictionary, similarity_threshold, model, embedding_model
     )
-    dictionary = merge_dictionaries(dictionary, related_words, embedding_model)
+    dictionary = merge_dictionaries(
+        dictionary, related_words, similarity_threshold, embedding_model
+    )
 
     while True:
         # Try to improve the language guide using the English text
@@ -46,7 +50,7 @@ def translate(guide_path, dictionary_path, text, model, embedding_model):
         while True:
             try:
                 dictionary = improve_dictionary(
-                    dictionary, guide, model, embedding_model
+                    dictionary, guide, similarity_threshold, model, embedding_model
                 )
                 break
             except ImproveDictionaryError as e:

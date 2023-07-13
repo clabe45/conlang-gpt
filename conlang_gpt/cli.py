@@ -41,6 +41,11 @@ def create(design_goals, guide_path, model):
 )
 @click.option("--changes", prompt="Enter the changes to apply to the language guide")
 @click.option(
+    "--similarity-threshold",
+    default=0.98,
+    help="Maximum similarity between two words to be considered the same. Defaults to 0.98.",
+)
+@click.option(
     "--model",
     default="gpt-3.5-turbo",
     help="OpenAI model to use. Defaults to gpt-3.5-turbo.",
@@ -50,10 +55,19 @@ def create(design_goals, guide_path, model):
     default="text-embedding-ada-002",
     help="OpenAI model to use for word embeddings in 'example' mode. Defaults to text-embedding-ada-002.",
 )
-def modify(guide_path, dictionary_path, changes, model, embeddings_model):
+def modify(
+    guide_path, dictionary_path, changes, similarity_threshold, model, embeddings_model
+):
     """Make specific changes to the language."""
 
-    modify_(guide_path, dictionary_path, changes, model, embeddings_model)
+    modify_(
+        guide_path,
+        dictionary_path,
+        changes,
+        similarity_threshold,
+        model,
+        embeddings_model,
+    )
 
 
 @cli.command()
@@ -73,6 +87,11 @@ def modify(guide_path, dictionary_path, changes, model, embeddings_model):
     help="Max number of revisions to perform. Defaults to 1.",
 )
 @click.option(
+    "--similarity-threshold",
+    default=0.98,
+    help="Maximum similarity between two words to be considered the same. Defaults to 0.98.",
+)
+@click.option(
     "--model",
     default="gpt-3.5-turbo",
     help="OpenAI model to use. Defaults to gpt-3.5-turbo.",
@@ -82,10 +101,26 @@ def modify(guide_path, dictionary_path, changes, model, embeddings_model):
     default="text-embedding-ada-002",
     help="OpenAI model to use for word embeddings in 'example' mode. Defaults to text-embedding-ada-002.",
 )
-def improve(guide_path, dictionary_path, text, max_iterations, model, embeddings_model):
+def improve(
+    guide_path,
+    dictionary_path,
+    text,
+    max_iterations,
+    similarity_threshold,
+    model,
+    embeddings_model,
+):
     """Automatically improve the language."""
 
-    improve_(guide_path, dictionary_path, text, max_iterations, model, embeddings_model)
+    improve_(
+        guide_path,
+        dictionary_path,
+        text,
+        max_iterations,
+        similarity_threshold,
+        model,
+        embeddings_model,
+    )
 
 
 @cli.command()
@@ -96,13 +131,22 @@ def improve(guide_path, dictionary_path, text, max_iterations, model, embeddings
     "--dictionary", "dictionary_path", prompt="Enter the filename of the dictionary"
 )
 @click.option("--text", prompt="Enter the text to translate")
+@click.option(
+    "--similarity-threshold",
+    default=0.98,
+    help="Maximum similarity between two words to be considered the same. Defaults to 0.98.",
+)
 @click.option("--model", default="gpt-3.5-turbo", help="OpenAI model to use")
 @click.option(
     "--embedding-model",
     default="text-embedding-ada-002",
     help="OpenAI model to use for word embeddings",
 )
-def translate(guide_path, dictionary_path, text, model, embedding_model):
+def translate(
+    guide_path, dictionary_path, text, similarity_threshold, model, embedding_model
+):
     """Translate text to or from a constructed language."""
 
-    translate_(guide_path, dictionary_path, text, model, embedding_model)
+    translate_(
+        guide_path, dictionary_path, text, similarity_threshold, model, embedding_model
+    )

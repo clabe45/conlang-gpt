@@ -8,7 +8,9 @@ from ..language import (
 )
 
 
-def modify(guide_path, dictionary_path, changes, model, embeddings_model):
+def modify(
+    guide_path, dictionary_path, changes, similarity_threshold, model, embeddings_model
+):
     """Make specific changes to the language."""
 
     # Load the beginner's guide
@@ -25,7 +27,9 @@ def modify(guide_path, dictionary_path, changes, model, embeddings_model):
     guide = modify_language(guide, changes, model)
 
     # Update the dictionary with the new guide
-    dictionary = improve_dictionary(dictionary, guide, model, embeddings_model)
+    dictionary = improve_dictionary(
+        dictionary, guide, similarity_threshold, model, embeddings_model
+    )
 
     # Save the new guide to a file
     with open(guide_path, "w") as file:

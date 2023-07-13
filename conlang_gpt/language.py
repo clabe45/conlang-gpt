@@ -267,7 +267,7 @@ def modify_language(guide, changes, model):
     return improved_guide
 
 
-def reduce_dictionary(words, embeddings_model):
+def reduce_dictionary(words, similarity_threshold, embeddings_model):
     """Remove similar words from a dictionary."""
 
     click.echo(
@@ -281,7 +281,10 @@ def reduce_dictionary(words, embeddings_model):
     words_to_remove = set()
     for word_a, embedding_a in word_embeddings.items():
         for word_b, embedding_b in word_embeddings.items():
-            if word_a != word_b and cosine_similarity(embedding_a, embedding_b) > 0.98:
+            if (
+                word_a != word_b
+                and cosine_similarity(embedding_a, embedding_b) > similarity_threshold
+            ):
                 click.echo(
                     click.style(
                         f"Removed {word_b} because it is similar to {word_a}.", dim=True
@@ -297,7 +300,7 @@ def reduce_dictionary(words, embeddings_model):
 
 
 def create_dictionary_for_text(
-    guide, text, existing_dictionary, model, embeddings_model
+    guide, text, existing_dictionary, similarity_threshold, model, embeddings_model
 ) -> dict:
     """Generate words for a constructed language."""
 
@@ -370,12 +373,14 @@ def create_dictionary_for_text(
         words[word] = translation
 
     # Remove similar words
-    words = reduce_dictionary(words, embeddings_model)
+    words = reduce_dictionary(words, similarity_threshold, embeddings_model)
 
     return words
 
 
-def improve_dictionary(dictionary, guide, model, embeddings_model, batch_size=25):
+def improve_dictionary(
+    dictionary, guide, similarity_threshold, model, embeddings_model, batch_size=25
+):
     """Update the dictionary to match the guide by focusing on updating the words themselves instead of their translations."""
 
     click.echo(click.style(f"Improving dictionary using {model}...", dim=True))
@@ -451,19 +456,23 @@ def improve_dictionary(dictionary, guide, model, embeddings_model, batch_size=25
             improved_batch[word] = translation
 
         # Remove similar words
-        improved_batch = reduce_dictionary(improved_batch, embeddings_model)
+        improved_batch = reduce_dictionary(
+            improved_batch, similarity_threshold, embeddings_model
+        )
 
         # Remove the old batch from the dictionary
         for word in words_to_improve[i : i + batch_size]:
             del dictionary[word]
 
         # Add the improved batch to the dictionary
-        dictionary = merge_dictionaries(dictionary, improved_batch, embeddings_model)
+        dictionary = merge_dictionaries(
+            dictionary, improved_batch, similarity_threshold, embeddings_model
+        )
 
     return dictionary
 
 
-def merge_dictionaries(a, b, embeddings_model):
+def merge_dictionaries(a, b, similarity_threshold, embeddings_model):
     """Merge two vocabulary dictionaries, removing similar words."""
 
     # Retrieve the embeddings for each word
@@ -484,7 +493,7 @@ def merge_dictionaries(a, b, embeddings_model):
         if a_word not in a or b_word not in b:
             continue
 
-        if similarity > 0.98:
+        if similarity > similarity_threshold:
             if len(b_word) < len(a_word):
                 click.echo(
                     click.style(

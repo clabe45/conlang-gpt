@@ -9,7 +9,15 @@ from ..language import (
 )
 
 
-def improve(guide_path, dictionary_path, text, max_iterations, model, embeddings_model):
+def improve(
+    guide_path,
+    dictionary_path,
+    text,
+    max_iterations,
+    similarity_threshold,
+    model,
+    embeddings_model,
+):
     """Automatically improve the language."""
 
     if text:
@@ -45,7 +53,7 @@ def improve(guide_path, dictionary_path, text, max_iterations, model, embeddings
         while True:
             try:
                 dictionary = improve_dictionary(
-                    dictionary, guide, model, embeddings_model
+                    dictionary, guide, similarity_threshold, model, embeddings_model
                 )
                 break
             except ImproveDictionaryError as error:
