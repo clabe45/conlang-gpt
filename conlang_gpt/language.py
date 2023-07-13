@@ -33,8 +33,16 @@ class ImproveDictionaryError(DictionaryError):
     pass
 
 
-class ParseDictionaryError(DictionaryError):
-    """Exception raised when a dictionary cannot be parsed."""
+class NoDictionaryError(DictionaryError):
+    """
+    Exception raised when a dictionary is not found in a response from ChatGPT.
+    """
+
+    pass
+
+
+class InvalidDictionaryError(DictionaryError):
+    """Exception raised when a dictionary is invalid."""
 
     pass
 
@@ -102,6 +110,54 @@ def _get_related_words(text, dictionary, embeddings_model):
         return related_words[:max_words]
     else:
         return related_words
+
+
+def _parse_dictionary(text, similarity_threshold, embeddings_model):
+    # Extract the CSV document, unless the text is just a message
+    document = None
+    if "\n\n" in text:
+        click.echo(text)
+        for paragraph in text.split("\n\n"):
+            if paragraph.startswith("Conlang,English"):
+                document = paragraph
+                break
+        else:
+            raise NoDictionaryError(text)
+    else:
+        document = text
+
+    # Parse the CSV document
+    reader = csv.reader(document.splitlines())
+    header = next(reader)
+    header = [column.strip() for column in header]
+
+    # Parse the words
+    dictionary = {}
+    for row in reader:
+        # Extract the word and translation
+        if len(row) != 2:
+            raise InvalidDictionaryError(
+                f"Invalid response. Expected row to have two columns: Word and Translation. Received: {row}"
+            )
+        word, translation = row
+
+        # If the word starts with a number (e.g., "1. hello"), remove the number
+        if "." in word:
+            first, rest = word.split(".", 1)
+            if first.isdigit():
+                word = rest.strip()
+
+        # Remove any trailing whitespace
+        word = word.strip()
+        translation = translation.strip()
+
+        # Add the word to the dictionary
+        dictionary[word] = translation
+
+    # Remove similar words
+    dictionary = reduce_dictionary(dictionary, similarity_threshold, embeddings_model)
+
+    return dictionary
 
 
 def translate_text(text, language_guide, dictionary, model, embeddings_model):
@@ -344,36 +400,10 @@ def create_dictionary_for_text(
         response = chat_completion["choices"][0]["message"]["content"]
 
     # Parse the generated words
-    reader = csv.reader(response.splitlines())
-    header = next(reader)
-    header = [column.strip() for column in header]
-    if header != ["Conlang", "English"]:
-        raise CreateDictionaryError(response)
-
-    words = {}
-    for row in reader:
-        # Extract the word and translation
-        if len(row) != 2:
-            raise ParseDictionaryError(
-                f"Invalid response. Expected row to have two columns: Word and Translation. Received: {row}"
-            )
-        word, translation = row
-
-        # If the word starts with a number (e.g., "1. hello"), remove the number
-        if "." in word:
-            first, rest = word.split(".", 1)
-            if first.isdigit():
-                word = rest.strip()
-
-        # Remove any trailing whitespace
-        word = word.strip()
-        translation = translation.strip()
-
-        # Add the word to the dictionary
-        words[word] = translation
-
-    # Remove similar words
-    words = reduce_dictionary(words, similarity_threshold, embeddings_model)
+    try:
+        words = _parse_dictionary(response, similarity_threshold, embeddings_model)
+    except NoDictionaryError as e:
+        raise CreateDictionaryError from e
 
     return words
 
@@ -414,51 +444,12 @@ def improve_dictionary(
         if "No problems found" in response:
             continue
 
-        # Extract the CSV document, unless the response is just a message
-        document = None
-        if "\n\n" in response:
-            click.echo(response)
-            for paragraph in response.split("\n\n"):
-                if paragraph.startswith("Conlang,English"):
-                    document = paragraph
-                    break
-            else:
-                raise ImproveDictionaryError(response)
-        else:
-            document = response
-
-        # Parse the CSV document
-        reader = csv.reader(document.splitlines())
-        header = next(reader)
-        header = [column.strip() for column in header]
-
-        # Parse the words
-        improved_batch = {}
-        for row in reader:
-            # Extract the word and translation
-            if len(row) != 2:
-                raise ParseDictionaryError(
-                    f"Invalid response. Expected row to have two columns: Word and Translation. Received: {row}"
-                )
-            word, translation = row
-
-            # If the word starts with a number (e.g., "1. hello"), remove the number
-            if "." in word:
-                first, rest = word.split(".", 1)
-                if first.isdigit():
-                    word = rest.strip()
-
-            # Remove any trailing whitespace
-            word = word.strip()
-            translation = translation.strip()
-
-            # Add the word to the batch
-            improved_batch[word] = translation
-
-        # Remove similar words
-        improved_batch = reduce_dictionary(
-            improved_batch, similarity_threshold, embeddings_model
-        )
+        try:
+            improved_batch = _parse_dictionary(
+                response, similarity_threshold, embeddings_model
+            )
+        except NoDictionaryError as e:
+            raise ImproveDictionaryError from e
 
         # Remove the old batch from the dictionary
         for word in words_to_improve[i : i + batch_size]:
