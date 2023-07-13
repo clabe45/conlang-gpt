@@ -72,7 +72,7 @@ Options:
 
 ### `conlang improve`
 
-Attempts to automatically improve the language guide and dictionary. The resulting guide and dictionary are saved to the original input files. Supports two modes - `simple` and `example`. In simple mode, a random flaw with the language is identified and fixed. In example mode, a random English sentence is generated, translated to the conlang and used to identify and fix a problem with the language.
+Attempts to automatically improve the language guide and dictionary. The resulting guide and dictionary are saved to the original input files.
 
 ```
 $ conlang improve --help
