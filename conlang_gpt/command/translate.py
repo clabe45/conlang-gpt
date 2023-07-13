@@ -1,6 +1,7 @@
 import click
 
 from ..language import (
+    ImproveDictionaryError,
     create_dictionary_for_text,
     generate_language,
     improve_dictionary,
