@@ -440,7 +440,7 @@ def improve_dictionary(
         )
         response = chat_completion["choices"][0]["message"]["content"]
 
-        # Parse the generated words
+        # Parse the response
         if "No problems found" in response:
             continue
 
