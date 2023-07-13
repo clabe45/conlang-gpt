@@ -12,21 +12,12 @@ from ..language import (
 def improve(
     guide_path,
     dictionary_path,
-    text,
     max_iterations,
     similarity_threshold,
     model,
     embeddings_model,
 ):
     """Automatically improve the language."""
-
-    if text:
-        click.echo(
-            click.style(
-                "The --text option is experimental. It may not work as expected.",
-                fg="yellow",
-            )
-        )
 
     # Load the beginner's guide
     with open(guide_path, "r") as file:
@@ -38,9 +29,7 @@ def improve(
     # Revise the language guide
     for i in range(max_iterations):
         # Try to improve the language guide
-        improved_guide = improve_language(
-            guide, dictionary, model, embeddings_model, text
-        )
+        improved_guide = improve_language(guide, dictionary, model, embeddings_model)
 
         # Stop if no problems were found
         if improved_guide is None:

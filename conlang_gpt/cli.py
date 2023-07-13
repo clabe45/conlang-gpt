@@ -80,7 +80,6 @@ def modify(
     required=False,
     help="Enter the filename of the dictionary to use in 'example' mode.",
 )
-@click.option("--text", required=False)
 @click.option(
     "--max-iterations",
     default=5,
@@ -104,7 +103,6 @@ def modify(
 def improve(
     guide_path,
     dictionary_path,
-    text,
     max_iterations,
     similarity_threshold,
     model,
@@ -115,7 +113,6 @@ def improve(
     improve_(
         guide_path,
         dictionary_path,
-        text,
         max_iterations,
         similarity_threshold,
         model,

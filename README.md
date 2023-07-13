@@ -84,7 +84,6 @@ Options:
   --guide TEXT
   --dictionary TEXT             Enter the filename of the dictionary to use in
                                 'example' mode.
-  --text TEXT
   --max-iterations INTEGER      Max number of revisions to perform. Defaults
                                 to 5.
   --similarity-threshold FLOAT  Maximum similarity between two words to be
