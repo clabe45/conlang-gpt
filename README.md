@@ -118,7 +118,7 @@ Options:
 
 ### `conlang translate`
 
-Translates text between any language ChatGPT was trained on to and the conlang. The language of the input text is automatically detected and used to dermine which language to translate to. If any problems are encountered while translating, the guide and dictionary will be automatically fixed.
+Translates text between any language ChatGPT was trained on to and the conlang. The language of the input text is automatically detected and used to dermine which language to translate to. If any problems are encountered while translating, the guide and dictionary will be repeatedly fixed until `--max-improvements` is reached.
 
 ```
 $ conlang translate --help
@@ -130,6 +130,8 @@ Options:
   --guide TEXT
   --dictionary TEXT
   --text TEXT
+  --max-improvements INTEGER    Max number of relevant improvements to make to
+                                the guide and dictionary. Defaults to 5.
   --similarity-threshold FLOAT  Maximum similarity between two words to be
                                 considered the same. Defaults to 0.98.
   --model TEXT                  OpenAI model to use

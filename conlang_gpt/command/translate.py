@@ -15,7 +15,13 @@ from ..language import (
 
 
 def translate(
-    guide_path, dictionary_path, text, similarity_threshold, model, embedding_model
+    guide_path,
+    dictionary_path,
+    text,
+    max_improvements,
+    similarity_threshold,
+    model,
+    embedding_model,
 ):
     """Translate text to or from a constructed language."""
 
@@ -34,11 +40,13 @@ def translate(
         dictionary, related_words, similarity_threshold, embedding_model
     )
 
-    while True:
+    improvements_made = 0
+    while improvements_made < max_improvements:
         # Try to improve the language guide using the English text
         improved_guide = improve_language(
             guide, dictionary, model, embedding_model, text
         )
+        improvements_made += 1
 
         # Stop if no problems were found
         if improved_guide is None:
@@ -48,11 +56,12 @@ def translate(
         guide = improved_guide
 
         # Update the dictionary with the new guide
-        while True:
+        while improvements_made < max_improvements:
             try:
                 dictionary = improve_dictionary(
                     dictionary, guide, similarity_threshold, model, embedding_model
                 )
+                improvements_made += 1
                 break
             except ImproveDictionaryError as e:
                 # If the dictionary can't be updated, it is most likely because

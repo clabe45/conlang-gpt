@@ -132,6 +132,11 @@ def improve(
 )
 @click.option("--text", prompt="Enter the text to translate")
 @click.option(
+    "--max-improvements",
+    default=5,
+    help="Max number of relevant improvements to make to the guide and dictionary. Defaults to 5.",
+)
+@click.option(
     "--similarity-threshold",
     default=0.98,
     help="Maximum similarity between two words to be considered the same. Defaults to 0.98.",
@@ -143,10 +148,22 @@ def improve(
     help="OpenAI model to use for word embeddings",
 )
 def translate(
-    guide_path, dictionary_path, text, similarity_threshold, model, embedding_model
+    guide_path,
+    dictionary_path,
+    text,
+    max_improvements,
+    similarity_threshold,
+    model,
+    embedding_model,
 ):
     """Translate text to or from a constructed language."""
 
     translate_(
-        guide_path, dictionary_path, text, similarity_threshold, model, embedding_model
+        guide_path,
+        dictionary_path,
+        text,
+        max_improvements,
+        similarity_threshold,
+        model,
+        embedding_model,
     )
