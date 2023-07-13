@@ -21,6 +21,12 @@ Conlang GPT is a command line tool for creating, modifying and using constructed
 pip install conlang-gpt
 ```
 
+## Anatomy of a Language
+
+Languages are represented as two files:
+- **Guide**: The purpose of the language guide is to describe how to use the language, including rules related to grammar and phonetics.
+- **Dictionary**: The dictionary contains the vocabulary for the language. It is built up lazily as more and more text is translated.
+
 ## Commands
 
 ### Overview
@@ -49,7 +55,7 @@ Before running any of them, set the `OPENAI_API_KEY` environment variable (keep 
 
 ### `conlang create`
 
-Creates the first draft of a guide for a new language and writes it to a file. This purpose of the guide is to describe how to use the language, including grammar rules and phonetics.
+Creates the first draft of a guide for a new language and writes it to a file.
 
 ```
 $ conlang create --help
