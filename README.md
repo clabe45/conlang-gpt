@@ -123,7 +123,7 @@ Options:
 
 ### `conlang translate`
 
-Translates text between any language ChatGPT was trained on to and the conlang. The language of the input text is automatically detected and used to dermine which language to translate to. If any problems are encountered while translating, the guide and dictionary will be repeatedly fixed until `--max-improvements` is reached.
+Translates text between any language ChatGPT was trained on to and from the conlang. The language of the input text is automatically detected and used to dermine which language to translate to. If any problems are encountered while translating, the guide and dictionary will be repeatedly fixed until `--max-improvements` is reached.
 
 ```
 $ conlang translate --help
