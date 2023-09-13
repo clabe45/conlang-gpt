@@ -4,7 +4,7 @@ Conlang GPT is a command line tool for creating, modifying and using constructed
 
 ## Features
 
-> :warning: This tool is in early development. It is not ready for production use.
+> :warning: This tool is in early development. It is not ready for production use. Regardless, anyone who's generating fake languages in a business context should carefully consider their life choices, but this is fine because it's open source.
 
 | Feature | Status |
 | --- | --- |
