@@ -112,24 +112,10 @@ def _get_related_words(text, dictionary, embeddings_model):
         return related_words
 
 
-def _parse_dictionary(text, similarity_threshold, embeddings_model):
-    # Extract the CSV document, unless the text is just a message
-    document = None
-    if "\n\n" in text:
-        click.echo(text)
-        for paragraph in text.split("\n\n"):
-            if paragraph.startswith("Conlang,English"):
-                document = paragraph
-                break
-        else:
-            raise NoDictionaryError(text)
-    else:
-        document = text
-
-    # Parse the CSV document
-    reader = csv.reader(document.splitlines())
-    header = next(reader)
-    header = [column.strip() for column in header]
+def _parse_dictionary_from_paragraph(paragraph, similarity_threshold, embeddings_model):
+    reader = csv.reader(paragraph.splitlines())
+    # Skip the header row
+    next(reader)
 
     # Parse the words
     dictionary = {}
@@ -154,8 +140,38 @@ def _parse_dictionary(text, similarity_threshold, embeddings_model):
         # Add the word to the dictionary
         dictionary[word] = translation
 
+    # Ensure that the dictionary is not empty
+    if not dictionary:
+        raise InvalidDictionaryError(
+            f"Invalid response. Expected a CSV document with at least one data row. Received: {paragraph}"
+        )
+
     # Remove similar words
     dictionary = reduce_dictionary(dictionary, similarity_threshold, embeddings_model)
+
+    return dictionary
+
+
+def _parse_dictionary(text, similarity_threshold, embeddings_model):
+    # Sometimes, ChatGPT returns multiple paragraphs. If this happens, use the
+    # first paragraph that can be parsed as a dictionary.
+    if "\n\n" in text:
+        click.echo(text)
+        for paragraph in text.split("\n\n"):
+            try:
+                dictionary = _parse_dictionary_from_paragraph(
+                    paragraph, similarity_threshold, embeddings_model
+                )
+                break
+            except InvalidDictionaryError:
+                pass
+        else:
+            raise NoDictionaryError(text)
+
+    else:
+        dictionary = _parse_dictionary_from_paragraph(
+            text, similarity_threshold, embeddings_model
+        )
 
     return dictionary
 
