@@ -416,6 +416,23 @@ def create_dictionary_for_text(
     except NoDictionaryError as e:
         raise CreateDictionaryError from e
 
+    # Remove new words that already had translations in the conlang
+    existing_english_words = set(
+        [word.lower() for word in existing_dictionary.values()]
+    )
+    words_to_remove = set()
+    for conlang_word, english_word in words.items():
+        if english_word.lower() in existing_english_words:
+            click.echo(
+                click.style(
+                    f"Removed {conlang_word} because it already had a translation.",
+                    dim=True,
+                )
+            )
+            words_to_remove.add(conlang_word)
+    for word in words_to_remove:
+        del words[word]
+
     return words
 
 
