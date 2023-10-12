@@ -391,30 +391,24 @@ def create_dictionary_for_text(
     formatted_related_words = mutable_formatted_related_words.getvalue()
 
     # Generate words
+    user_message = None
     if len(related_words) > 0:
         click.echo(f"Related words:\n\n{formatted_related_words}\n")
-        chat_completion = complete_chat(
-            model=model,
-            messages=[
-                {
-                    "role": "user",
-                    "content": f"Create any missing words required to translate the following text into the constructed language outlined below. The Conlang-to-English dictionary is lazy-generated. The words you create will be saved to this dictionary. Your response should be a CSV document with two columns: Conlang and English. Each row should have exactly two cells.\n\nLanguage guide:\n\n{guide}\n\nText to translate (either from or to the conlang):\n\n{text}\n\nExisting words that could be related:\n\n{formatted_related_words}",
-                }
-            ],
-        )
-        response = chat_completion["choices"][0]["message"]["content"]
-
+        user_message = f"Create any missing words required to translate the following text into the constructed language outlined below. The Conlang-to-English dictionary is lazy-generated. The words you create will be saved to this dictionary. Your response should be a CSV document with two columns: Conlang and English. Each row should have exactly two cells.\n\nLanguage guide:\n\n{guide}\n\nText to translate (either from or to the conlang):\n\n{text}\n\nExisting words that could be related:\n\n{formatted_related_words}"
     else:
-        chat_completion = complete_chat(
-            model=model,
-            messages=[
-                {
-                    "role": "user",
-                    "content": f"Create all the words required to translate the following text into the constructed language outlined below. The Conlang-to-English dictionary is lazy-generated. None of the words found in the text currently have translations in this dictionary. The words you create will be saved there. Your response should be a CSV document with two columns: Conlang and English. Each row should have exactly two cells.\n\nLanguage guide:\n\n{guide}\n\nEnglish text:\n\n{text}.",
-                }
-            ],
-        )
-        response = chat_completion["choices"][0]["message"]["content"]
+        user_message = f"Create all the words required to translate the following text into the constructed language outlined below. The Conlang-to-English dictionary is lazy-generated. None of the words found in the text currently have translations in this dictionary. The words you create will be saved there. Your response should be a CSV document with two columns: Conlang and English. Each row should have exactly two cells.\n\nLanguage guide:\n\n{guide}\n\nEnglish text:\n\n{text}."
+
+    chat_completion = complete_chat(
+        model=model,
+        messages=[
+            {
+                "role": "user",
+                "content": user_message,
+            }
+        ],
+        temperature=0,
+    )
+    response = chat_completion["choices"][0]["message"]["content"]
 
     # Parse the generated words
     try:
