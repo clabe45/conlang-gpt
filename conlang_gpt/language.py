@@ -382,7 +382,7 @@ def create_dictionary_for_text(
             messages=[
                 {
                     "role": "user",
-                    "content": f"Create any missing words required to translate the following text into the constructed language outlined below. Your response should be a CSV document with two columns: Conlang and English. Each row should have exactly two cells.\n\nLanguage guide:\n\n{guide}\n\nText to translate (either from or to the conlang):\n\n{text}\n\nExisting words that could be related:\n\n{formatted_related_words}",
+                    "content": f"Create any missing words required to translate the following text into the constructed language outlined below. The Conlang-to-English dictionary is lazy-generated. The words you create will be saved to this dictionary. Your response should be a CSV document with two columns: Conlang and English. Each row should have exactly two cells.\n\nLanguage guide:\n\n{guide}\n\nText to translate (either from or to the conlang):\n\n{text}\n\nExisting words that could be related:\n\n{formatted_related_words}",
                 }
             ],
         )
@@ -394,7 +394,7 @@ def create_dictionary_for_text(
             messages=[
                 {
                     "role": "user",
-                    "content": f"Create all the words required to translate the following text into the constructed language outlined below. Your response should be a CSV document with two columns: Conlang and English. Each row should have exactly two cells.\n\nLanguage guide:\n\n{guide}\n\nText to translate (either from or to the conlang):\n\n{text}\n\nNo existing words are related to the text.",
+                    "content": f"Create all the words required to translate the following text into the constructed language outlined below. The Conlang-to-English dictionary is lazy-generated. None of the words found in the text currently have translations in this dictionary. The words you create will be saved there. Your response should be a CSV document with two columns: Conlang and English. Each row should have exactly two cells.\n\nLanguage guide:\n\n{guide}\n\nEnglish text:\n\n{text}.",
                 }
             ],
         )
