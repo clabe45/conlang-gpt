@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "conlang-gpt"
-version = "0.3.0"
+version = "0.3.1"
 description = "ChatGPT language generator and translator"
 authors = ["Caleb Sacks <16855387+clabe45@users.noreply.github.com>"]
 readme = "README.md"
