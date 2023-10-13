@@ -46,7 +46,7 @@ def improve(
                     dictionary, guide, similarity_threshold, model, embeddings_model
                 )
                 break
-            except ImproveDictionaryError as error:
+            except ImproveDictionaryError as e:
                 # If the dictionary can't be updated, it is most likely because
                 # the guide is invalid. Try to fix the guide and then try
                 # again.
