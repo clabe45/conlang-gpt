@@ -1,6 +1,7 @@
 import csv
 import io
 import math
+import re
 from openai.embeddings_utils import cosine_similarity
 import os
 import pickle
@@ -222,18 +223,23 @@ def translate_text(text, language_guide, dictionary, model, embeddings_model):
         response = chat_completion["choices"][0]["message"]["content"]
 
     # Parse the translation
-    if "<translation>" not in response or "</translation>" not in response:
+    if (
+        "<translation>" not in response.lower()
+        or "</translation>" not in response.lower()
+    ):
         # If the translation is not wrapped in <translation> and </translation>,
         # the response is probably an explanation of why the text cannot be
         # translated.
         raise TranslationError(response)
 
     # Extract the final translation
-    translated_text = response.split("<translation>", 1)[1].split("</translation>", 1)[
+    translated_text = re.split("<translation>", response, flags=re.IGNORECASE)[1]
+    translated_text = re.split("</translation>", translated_text, flags=re.IGNORECASE)[
         0
     ]
     # Remove the xml markup from the explanation
-    explanation = response.replace("<translation>", "").replace("</translation>", "")
+    explanation = re.sub("<translation>", "", response, flags=re.IGNORECASE)
+    explanation = re.sub("</translation>", "", explanation, flags=re.IGNORECASE)
 
     return translated_text, explanation
 
