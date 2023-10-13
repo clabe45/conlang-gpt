@@ -32,13 +32,21 @@ def translate(
     # Load the dictionary
     dictionary = load_dictionary(dictionary_path)
 
-    # Add any missing words to the dictionary
-    related_words = create_dictionary_for_text(
-        guide, text, dictionary, similarity_threshold, model, embedding_model
-    )
-    dictionary = merge_dictionaries(
-        dictionary, related_words, similarity_threshold, embedding_model
-    )
+    # Add any missing words to the dictionary. Regenerate the new words until no
+    # near-duplicates (either in the word or the translation) are found (in case
+    # two similar conlang words mean different things).
+    while True:
+        new_words = create_dictionary_for_text(
+            guide, text, dictionary, similarity_threshold, model, embedding_model
+        )
+        if len(new_words) == 0:
+            break
+        new_dictionary = merge_dictionaries(
+            dictionary, new_words, similarity_threshold, embedding_model
+        )
+        if len(new_dictionary) == len(dictionary) + len(new_words):
+            dictionary = new_dictionary
+            break
 
     improvements_made = 0
     while improvements_made < max_improvements:
