@@ -433,7 +433,7 @@ def create_dictionary_for_text(
                 "content": user_message,
             }
         ],
-        temperature=0,
+        temperature=0.3,
     )
     response = chat_completion["choices"][0]["message"]["content"]
 
