@@ -47,6 +47,12 @@ class InvalidDictionaryError(DictionaryError):
     pass
 
 
+class TranslationError(LanguageError):
+    """Exception raised when there is an error with a translation."""
+
+    pass
+
+
 def _get_embeddings(text, embeddings_model):
     """Retrieve and cache the embeddings for some text."""
 
@@ -196,11 +202,11 @@ def translate_text(text, language_guide, dictionary, model, embeddings_model):
             messages=[
                 {
                     "role": "user",
-                    "content": f"Translate the text below from or into the following constructed language. Explain how you arrived at the translation. Only use words found in either the guide or the list below.\n\nLanguage guide:\n\n{language_guide}\n\nPotentially-related words:\n\n{formatted_related_words}\n\nText to translate:\n\n{text}",
+                    "content": f"Translate the text below from or into the following constructed language. Explain how you arrived at the translation. Only use words found in either the guide or the list below. Wrap the final translation with <translation> and </translation>.\n\nLanguage guide:\n\n{language_guide}\n\nPotentially-related words:\n\n{formatted_related_words}\n\nText to translate:\n\n{text}",
                 }
             ],
         )
-        translation = chat_completion["choices"][0]["message"]["content"]
+        response = chat_completion["choices"][0]["message"]["content"]
 
     else:
         chat_completion = complete_chat(
@@ -208,13 +214,27 @@ def translate_text(text, language_guide, dictionary, model, embeddings_model):
             messages=[
                 {
                     "role": "user",
-                    "content": f"Translate the text below from or into the following constructed language. Explain how you arrived at the translation. Only use words found in the guide.\n\nNo relevant words from dictionary found.\n\nLanguage guide:\n\n{language_guide}\n\nText to translate:\n\n{text}",
+                    "content": f"Translate the text below from or into the following constructed language. Explain how you arrived at the translation. Only use words found in the guide.\n\nNo relevant words from dictionary found. Wrap the final translation with <translation> and </translation>.\n\nLanguage guide:\n\n{language_guide}\n\nText to translate:\n\n{text}",
                 }
             ],
         )
-        translation = chat_completion["choices"][0]["message"]["content"]
+        response = chat_completion["choices"][0]["message"]["content"]
 
-    return translation
+    # Parse the translation
+    if "<translation>" not in response or "</translation>" not in response:
+        # If the translation is not wrapped in <translation> and </translation>,
+        # the response is probably an explanation of why the text cannot be
+        # translated.
+        raise TranslationError(response)
+
+    # Extract the final translation
+    translated_text = response.split("<translation>", 1)[1].split("</translation>", 1)[
+        0
+    ]
+    # Remove the xml markup from the explanation
+    explanation = response.replace("<translation>", "").replace("</translation>", "")
+
+    return translated_text, explanation
 
 
 def generate_english_text(model):
@@ -259,8 +279,14 @@ def improve_language(guide, dictionary, model, embeddings_model, text=None):
 
     else:
         # Attempt to translate the provided text
-        translation = translate_text(text, guide, dictionary, model, embeddings_model)
-        click.echo(f"Translated text:\n\n{translation}\n")
+        try:
+            _, explanation = translate_text(
+                text, guide, dictionary, model, embeddings_model
+            )
+        except TranslationError as e:
+            explanation = str(e)
+
+        click.echo(f"Translation:\n\n{explanation}\n")
 
         # Identify problems with the language using the translated text as an example/reference
         chat_completion = complete_chat(
@@ -271,7 +297,7 @@ def improve_language(guide, dictionary, model, embeddings_model, text=None):
             messages=[
                 {
                     "role": "user",
-                    "content": f'If the language outlined below has any flaws, contradictions or points of confusion, please identify one and provide specific, detailed, actionable steps to fix it. Otherwise, respond with "No problem found". I included a sample translation to give you more context.\n\nLanguage guide:\n\n{guide}\n\nOriginal text: {text}\n\nTranslated text: {translation}',
+                    "content": f'If the language outlined below has any flaws, contradictions or points of confusion, please identify one and provide specific, detailed, actionable steps to fix it. Otherwise, respond with "No problem found". I included a sample translation to give you more context.\n\nLanguage guide:\n\n{guide}\n\nOriginal text: {text}\n\nTranslated text: {explanation}',
                 }
             ],
         )

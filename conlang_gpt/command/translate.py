@@ -86,8 +86,8 @@ def translate(
                     guide = modified_guide
 
     # Translate the text
-    translation = translate_text(text, guide, dictionary, model, embedding_model)
-    click.echo(translation)
+    _, explanation = translate_text(text, guide, dictionary, model, embedding_model)
+    click.echo(explanation)
 
     # Save the updated guide
     with open(guide_path, "w") as file:
