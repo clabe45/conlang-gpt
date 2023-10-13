@@ -470,6 +470,13 @@ def create_dictionary_for_text(
     for word in words_to_remove:
         del words[word]
 
+    # Print the new words
+    if words:
+        formatted_words = "\n".join(
+            [f"- {word}: {translation}" for word, translation in words.items()]
+        )
+        click.echo(f"New words:\n\n{formatted_words}\n")
+
     return words
 
 
