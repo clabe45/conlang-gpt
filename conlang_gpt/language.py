@@ -129,7 +129,7 @@ def _parse_dictionary_from_paragraph(paragraph, similarity_threshold, embeddings
     for row in reader:
         # Extract the word and translation
         if len(row) != 2:
-            raise InvalidDictionaryError(
+            raise NoDictionaryError(
                 f"Invalid response. Expected row to have two columns: Word and Translation. Received: {row}"
             )
         word, translation = row
@@ -149,7 +149,7 @@ def _parse_dictionary_from_paragraph(paragraph, similarity_threshold, embeddings
 
     # Ensure that the dictionary is not empty
     if not dictionary:
-        raise InvalidDictionaryError(
+        raise NoDictionaryError(
             f"Invalid response. Expected a CSV document with at least one data row. Received: {paragraph}"
         )
 
@@ -170,7 +170,7 @@ def _parse_dictionary(text, similarity_threshold, embeddings_model):
                     paragraph, similarity_threshold, embeddings_model
                 )
                 break
-            except InvalidDictionaryError:
+            except NoDictionaryError:
                 pass
         else:
             raise NoDictionaryError(text)
