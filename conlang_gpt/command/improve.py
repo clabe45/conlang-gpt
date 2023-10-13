@@ -6,6 +6,7 @@ from ..language import (
     improve_language,
     load_dictionary,
     modify_language,
+    save_dictionary,
 )
 
 
