@@ -441,7 +441,11 @@ def create_dictionary_for_text(
     try:
         words = _parse_dictionary(response, similarity_threshold, embeddings_model)
     except NoDictionaryError as e:
-        raise CreateDictionaryError from e
+        # If no dictionary was returned, ChatGPT probably stated that no new
+        # words were required to translate the text. Return an empty dictionary,
+        # but print the message from ChatGPT.
+        click.echo(click.style(str(e), fg="yellow"))
+        return {}
 
     # Remove new words that already had translations in the conlang
     existing_english_words = set(
