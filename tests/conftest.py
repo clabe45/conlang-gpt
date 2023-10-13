@@ -1,3 +1,5 @@
+import csv
+
 import pytest
 
 
@@ -55,5 +57,22 @@ def guide():
 
 
 @pytest.fixture()
+def guide_path(tmp_path, guide):
+    path = tmp_path / "guide.md"
+    path.write_text(guide)
+    return path
+
+
+@pytest.fixture()
 def dictionary():
     return {}
+
+
+@pytest.fixture()
+def dictionary_path(tmp_path, dictionary):
+    path = tmp_path / "dictionary.csv"
+    csv_writer = csv.writer(path.open("w"))
+    csv_writer.writerow(["Word", "Translation"])
+    for word, translation in dictionary.items():
+        csv_writer.writerow([word, translation])
+    return path

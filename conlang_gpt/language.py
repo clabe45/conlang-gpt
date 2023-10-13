@@ -1,5 +1,6 @@
 import csv
 import io
+import math
 from openai.embeddings_utils import cosine_similarity
 import os
 import pickle
@@ -84,7 +85,7 @@ def _get_related_words(text, dictionary, embeddings_model):
     )
 
     # The longer the text, the more words we want to return
-    max_words = min(len(dictionary), int(len(text) / 2.5))
+    max_words = min(len(dictionary), int(math.ceil(len(text) / 2.5)))
 
     # Get the embeddings for the text
     text_embeddings = _get_embeddings(text, embeddings_model)
