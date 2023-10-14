@@ -446,7 +446,7 @@ def create_dictionary_for_text(
                 "content": user_message,
             }
         ],
-        temperature=0.5,
+        temperature=1,
         presence_penalty=2,
     )
     response = chat_completion["choices"][0]["message"]["content"]
@@ -520,7 +520,7 @@ def create_dictionary_for_text(
                     "content": f"Replace the following conlang words with completely new ones. The translations should remain exactly the same. Your response should be a CSV document with two columns: Conlang and English. Each row should have exactly two cells.\n\nLanguage guide:\n\n{guide}\n\nWords to regenerate:\n\n{formatted_conflicting_words}",
                 }
             ],
-            temperature=0.5,
+            temperature=1,
             presence_penalty=2,
         )
         response = chat_completion["choices"][0]["message"]["content"]
