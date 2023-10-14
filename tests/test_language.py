@@ -45,6 +45,19 @@ def test_create_dictionary_for_text_returns_empty_dictionary_when_all_words_are_
     assert len(dictionary) == 0
 
 
+def test_create_dictionary_for_text_does_not_generate_names_of_people(guide):
+    dictionary = create_dictionary_for_text(
+        guide,
+        "Bob walks",
+        {"u": "walks"},
+        0.98,
+        "gpt-4",
+        "text-embedding-ada-002",
+    )
+
+    assert len(dictionary) == 0
+
+
 def test_translate_text_translated_translation_is_similar_to_original_text(
     guide,
 ):
