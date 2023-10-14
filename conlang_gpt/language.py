@@ -87,7 +87,7 @@ def _get_related_words(text, dictionary, embeddings_model):
     )
 
     # The longer the text, the more words we want to return
-    max_words = min(len(dictionary), int(math.ceil(len(text) / 2.5)))
+    max_words = min(len(dictionary), int(math.ceil(len(text) / 2.0)))
 
     # Get the embeddings for the text
     text_embeddings = _get_embeddings(text, embeddings_model)
