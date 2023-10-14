@@ -1,5 +1,6 @@
 import csv
 import io
+from itertools import combinations
 import math
 import re
 from openai.embeddings_utils import cosine_similarity
@@ -387,18 +388,19 @@ def reduce_dictionary(words, similarity_threshold, embeddings_model):
 
     # Remove similar words
     words_to_remove = set()
-    for word_a, embedding_a in word_embeddings.items():
-        for word_b, embedding_b in word_embeddings.items():
-            if (
-                word_a != word_b
-                and cosine_similarity(embedding_a, embedding_b) > similarity_threshold
-            ):
-                click.echo(
-                    click.style(
-                        f"Removed {word_b} because it is similar to {word_a}.", dim=True
-                    )
+    for (word_a, embedding_a), (word_b, embedding_b) in combinations(
+        word_embeddings.items(), 2
+    ):
+        if (
+            word_a != word_b
+            and cosine_similarity(embedding_a, embedding_b) > similarity_threshold
+        ):
+            click.echo(
+                click.style(
+                    f"Removed {word_b} because it is similar to {word_a}.", dim=True
                 )
-                words_to_remove.add(word_b)
+            )
+            words_to_remove.add(word_b)
 
     # Remove the similar words from the dictionary
     for word in words_to_remove:
