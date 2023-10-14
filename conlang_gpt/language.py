@@ -122,7 +122,7 @@ def _get_related_words(text, dictionary, embeddings_model):
 
 
 def _parse_dictionary_from_paragraph(paragraph, similarity_threshold, embeddings_model):
-    reader = csv.reader(paragraph.splitlines())
+    reader = csv.reader(io.StringIO(paragraph))
     # Skip the header row
     next(reader)
 
