@@ -384,12 +384,15 @@ def reduce_dictionary(words, similarity_threshold, embeddings_model):
     )
 
     # Retrieve the embeddings for each word
-    word_embeddings = {word: _get_embeddings(word, embeddings_model) for word in words}
+    translation_embeddings = {
+        word: _get_embeddings(translation, embeddings_model)
+        for word, translation in words.items()
+    }
 
     # Remove similar words
     words_to_remove = set()
     for (word_a, embedding_a), (word_b, embedding_b) in combinations(
-        word_embeddings.items(), 2
+        translation_embeddings.items(), 2
     ):
         if (
             word_a != word_b
