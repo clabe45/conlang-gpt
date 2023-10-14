@@ -478,6 +478,69 @@ def create_dictionary_for_text(
     for word in words_to_remove:
         del words[word]
 
+    # Regenerate duplicate conlang words
+    while True:
+        # Get the words that are already in the dictionary
+        existing_conlang_words = set([word.lower() for word in existing_dictionary])
+
+        # Get the words that are in the dictionary but have different translations
+        conflicting_words = {}
+        for word in words:
+            if word.lower() in existing_conlang_words:
+                conflicting_words[word] = existing_dictionary[word]
+
+        # If there are no conflicting words, stop
+        if len(conflicting_words) == 0:
+            break
+
+        # Remove the conflicting words from the dictionary
+        for word in conflicting_words:
+            del words[word]
+
+        # Format the conflicting words as a CSV document
+        mutable_formatted_conflicting_words = io.StringIO()
+        writer = csv.writer(mutable_formatted_conflicting_words)
+        writer.writerow(["Conlang", "English"])
+        for word, translation in conflicting_words.items():
+            writer.writerow([word, translation])
+        formatted_conflicting_words = mutable_formatted_conflicting_words.getvalue()
+
+        # Regenerate the conflicting words
+        click.echo(
+            click.style(
+                f"Regenerating {len(conflicting_words)} conflicting words...",
+                dim=True,
+            )
+        )
+        chat_completion = complete_chat(
+            model=model,
+            messages=[
+                {
+                    "role": "user",
+                    "content": f"Replace the following conlang words with completely new ones. The translations should remain exactly the same. Your response should be a CSV document with two columns: Conlang and English. Each row should have exactly two cells.\n\nLanguage guide:\n\n{guide}\n\nWords to regenerate:\n\n{formatted_conflicting_words}",
+                }
+            ],
+            temperature=0.5,
+            presence_penalty=2,
+        )
+        response = chat_completion["choices"][0]["message"]["content"]
+
+        # Parse the regenerated words
+        try:
+            regenerated_words = _parse_dictionary(
+                response, similarity_threshold, embeddings_model
+            )
+        except NoDictionaryError as e:
+            # If no dictionary was returned, ChatGPT probably stated that no new
+            # words were required to translate the text. Return an empty dictionary,
+            # but print the message from ChatGPT.
+            click.echo(click.style(str(e), fg="yellow"))
+            return {}
+
+        # Add the regenerated words to the dictionary
+        for word, translation in regenerated_words.items():
+            words[word] = translation
+
     # Print the new words
     if words:
         formatted_words = "\n".join(
