@@ -577,7 +577,7 @@ def improve_dictionary(
             messages=[
                 {
                     "role": "user",
-                    "content": f'Ensure that the following words are correctly translated into the constructed language outlined below. If any of the words do not adhere to the guide below, update or remove them as you see fit. Your response should be a CSV document with two columns: Conlang and English. Each row should have exactly two cells. If the word list below is correct and complete, respond with "No problems found".\n\nLanguage guide:\n\n{guide}\n\nWords to improve:\n\n{formatted_batch}',
+                    "content": f'Ensure that the following words are correctly translated into the constructed language outlined below. If any of the words do not adhere to the guide below, update them as you see fit. Your response should be a CSV document with two columns: Conlang and English. Each row represents a word that needs to be updated and should have exactly two cells. If the word list below is correct and complete, respond with "No problems found".\n\nLanguage guide:\n\n{guide}\n\nWords to improve:\n\n{formatted_batch}',
                 }
             ],
         )
@@ -588,19 +588,28 @@ def improve_dictionary(
             continue
 
         try:
-            improved_batch = _parse_dictionary(
+            improved_words = _parse_dictionary(
                 response, similarity_threshold, embeddings_model
             )
         except NoDictionaryError as e:
             raise ImproveDictionaryError from e
 
-        # Remove the old batch from the dictionary
-        for word in words_to_improve[i : i + batch_size]:
-            del dictionary[word]
+        # Update the words in the dictionary with the improved words
+        for improved_word, improved_translation in improved_words.items():
+            for existing_word in words_to_improve:
+                existing_translation = dictionary[existing_word]
+                if improved_translation.lower() == existing_translation.lower():
+                    click.echo(
+                        click.style(
+                            f"Updated {existing_word} to {improved_word}.", dim=True
+                        )
+                    )
+                    del dictionary[existing_word]
+                    dictionary[improved_word] = improved_translation
 
         # Add the improved batch to the dictionary
         dictionary = merge_dictionaries(
-            dictionary, improved_batch, similarity_threshold, embeddings_model
+            dictionary, improved_words, similarity_threshold, embeddings_model
         )
 
     return dictionary

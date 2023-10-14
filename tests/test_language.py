@@ -2,7 +2,11 @@ import csv
 
 from openai.embeddings_utils import cosine_similarity
 
-from conlang_gpt.language import create_dictionary_for_text, translate_text
+from conlang_gpt.language import (
+    create_dictionary_for_text,
+    improve_dictionary,
+    translate_text,
+)
 from conlang_gpt.openai import get_embedding
 
 
@@ -56,6 +60,20 @@ def test_create_dictionary_for_text_does_not_generate_names_of_people(guide):
     )
 
     assert len(dictionary) == 0
+
+
+def test_improve_dictionary_updates_words_that_do_not_follow_guide_rules(
+    guide,
+):
+    improved_dictionary = improve_dictionary(
+        {"C": "Hello"},
+        guide,
+        0.98,
+        "gpt-4",
+        "text-embedding-ada-002",
+    )
+
+    assert len(improved_dictionary) == 1 and "C" not in improved_dictionary
 
 
 def test_translate_text_translated_translation_is_similar_to_original_text(
