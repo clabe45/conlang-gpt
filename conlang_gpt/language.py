@@ -609,11 +609,6 @@ def improve_dictionary(
                     del dictionary[existing_word]
                     dictionary[improved_word] = improved_translation
 
-        # Add the improved batch to the dictionary
-        dictionary = merge_dictionaries(
-            dictionary, improved_words, similarity_threshold, embeddings_model
-        )
-
     return dictionary
 
 
