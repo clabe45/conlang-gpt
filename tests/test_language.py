@@ -97,7 +97,7 @@ def test_reduce_dictionary_removes_similar_words(
     word1, translation1, word2, translation2
 ):
     dictionary = reduce_dictionary(
-        {word1: translation1, word2: translation2}, 0.85, "text-embedding-ada-002"
+        {word1: translation1, word2: translation2}, 0.9, "text-embedding-ada-002"
     )
 
     assert len(dictionary) == 1
@@ -117,7 +117,7 @@ def test_merge_dictionaries_merges_words_with_similar_translations(
     word1, translation1, word2, translation2
 ):
     dictionary = merge_dictionaries(
-        {word1: translation1}, {word2: translation2}, 0.85, "text-embedding-ada-002"
+        {word1: translation1}, {word2: translation2}, 0.9, "text-embedding-ada-002"
     )
 
     assert len(dictionary) == 1
