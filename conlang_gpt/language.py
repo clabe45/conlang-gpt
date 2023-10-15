@@ -595,7 +595,7 @@ def improve_dictionary(
 
         # Update the words in the dictionary with the improved words
         for improved_word, improved_translation in improved_words.items():
-            for existing_word in words_to_improve:
+            for existing_word in words_to_improve[i : i + batch_size]:
                 if not existing_word in dictionary:
                     continue
 
