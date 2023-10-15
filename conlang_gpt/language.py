@@ -615,11 +615,17 @@ def improve_dictionary(
 def merge_dictionaries(a, b, similarity_threshold, embeddings_model):
     """Merge two vocabulary dictionaries, removing similar words."""
 
-    # Retrieve the embeddings for each word
-    a_embeddings = {word: _get_embeddings(word, embeddings_model) for word in a.keys()}
-    b_embeddings = {word: _get_embeddings(word, embeddings_model) for word in b.keys()}
+    # Retrieve the embeddings for each translation
+    a_embeddings = {
+        word: _get_embeddings(translation, embeddings_model)
+        for word, translation in a.items()
+    }
+    b_embeddings = {
+        word: _get_embeddings(translation, embeddings_model)
+        for word, translation in b.items()
+    }
 
-    # Calculate the cosine similarity between each pair of words
+    # Calculate the cosine similarity between each pair of translations
     a = dict(a)
     b = dict(b)
     similarities = {}
@@ -627,7 +633,7 @@ def merge_dictionaries(a, b, similarity_threshold, embeddings_model):
         for b_word, b_embedding in b_embeddings.items():
             similarities[(a_word, b_word)] = cosine_similarity(a_embedding, b_embedding)
 
-    # Remove words that are too similar. Prefer shorter words.
+    # Remove words whose translations are too similar. Prefer shorter words.
     for (a_word, b_word), similarity in similarities.items():
         # Skip words that have already been removed
         if a_word not in a or b_word not in b:

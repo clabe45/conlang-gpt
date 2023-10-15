@@ -1,10 +1,12 @@
 import csv
 
 from openai.embeddings_utils import cosine_similarity
+import pytest
 
 from conlang_gpt.language import (
     create_dictionary_for_text,
     improve_dictionary,
+    merge_dictionaries,
     translate_text,
 )
 from conlang_gpt.openai import get_embedding
@@ -74,6 +76,26 @@ def test_improve_dictionary_updates_words_that_do_not_follow_guide_rules(
     )
 
     assert len(improved_dictionary) == 1 and "C" not in improved_dictionary
+
+
+@pytest.mark.parametrize(
+    "word1, translation1, word2, translation2",
+    [
+        ("E", "Hello", "I", "Hello"),
+        ("E", "Hello", "I", "Hi"),
+        ("E", "Be", "I", "Am"),
+        ("E", "Be", "I", "Is"),
+        ("E", "Be", "I", "Are"),
+    ],
+)
+def test_merge_dictionaries_merges_words_with_similar_translations(
+    word1, translation1, word2, translation2
+):
+    dictionary = merge_dictionaries(
+        {word1: translation1}, {word2: translation2}, 0.85, "text-embedding-ada-002"
+    )
+
+    assert len(dictionary) == 1
 
 
 def test_translate_text_translated_translation_is_similar_to_original_text(
