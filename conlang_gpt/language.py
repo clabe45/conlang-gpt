@@ -397,7 +397,8 @@ def reduce_dictionary(words, similarity_threshold, embeddings_model):
         if cosine_similarity(embedding_a, embedding_b) > similarity_threshold:
             click.echo(
                 click.style(
-                    f"Removed {word_b} because it is similar to {word_a}.", dim=True
+                    f"Removing {word_b} ({words[word_b]}) because it is too similar to {word_a} ({words[word_a]}).",
+                    dim=True,
                 )
             )
             words_to_remove.add(word_b)
@@ -615,6 +616,10 @@ def improve_dictionary(
 def merge_dictionaries(a, b, similarity_threshold, embeddings_model):
     """Merge two vocabulary dictionaries, removing similar words."""
 
+    click.echo(
+        click.style(f"Merging dictionaries using {embeddings_model}...", dim=True)
+    )
+
     # Retrieve the embeddings for each translation
     a_embeddings = {
         word: _get_embeddings(translation, embeddings_model)
@@ -643,7 +648,7 @@ def merge_dictionaries(a, b, similarity_threshold, embeddings_model):
             if len(b_word) < len(a_word):
                 click.echo(
                     click.style(
-                        f"Removing {a_word} because it is too similar to {b_word}.",
+                        f"Removing {a_word} ({b[b_word]}) because it is too similar to {b_word} ({b[b_word]}).",
                         dim=True,
                     )
                 )
@@ -651,7 +656,7 @@ def merge_dictionaries(a, b, similarity_threshold, embeddings_model):
             else:
                 click.echo(
                     click.style(
-                        f"Removing {b_word} because it is too similar to {a_word}.",
+                        f"Removing {b_word} ({b[b_word]}) because it is too similar to {a_word} ({a[a_word]}).",
                         dim=True,
                     )
                 )
