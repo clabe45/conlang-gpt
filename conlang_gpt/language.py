@@ -394,10 +394,7 @@ def reduce_dictionary(words, similarity_threshold, embeddings_model):
     for (word_a, embedding_a), (word_b, embedding_b) in combinations(
         translation_embeddings.items(), 2
     ):
-        if (
-            word_a != word_b
-            and cosine_similarity(embedding_a, embedding_b) > similarity_threshold
-        ):
+        if cosine_similarity(embedding_a, embedding_b) > similarity_threshold:
             click.echo(
                 click.style(
                     f"Removed {word_b} because it is similar to {word_a}.", dim=True
