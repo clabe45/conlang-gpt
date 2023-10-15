@@ -76,7 +76,11 @@ def test_improve_dictionary_updates_words_that_do_not_follow_guide_rules(
         "text-embedding-ada-002",
     )
 
-    assert len(improved_dictionary) == 1 and "C" not in improved_dictionary
+    assert (
+        len(improved_dictionary) == 1
+        and set(improved_dictionary.values()) == {"Hello"}
+        and set(improved_dictionary.keys()) != {"C"}
+    )
 
 
 @pytest.mark.parametrize(
