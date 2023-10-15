@@ -565,6 +565,8 @@ def improve_dictionary(
         writer = csv.writer(mutable_batch_string)
         writer.writerow(["Conlang", "English"])
         for word in words_to_improve[i : i + batch_size]:
+            if not word in dictionary:
+                continue
             writer.writerow([word, dictionary[word]])
         formatted_batch = mutable_batch_string.getvalue()
 
@@ -594,6 +596,9 @@ def improve_dictionary(
         # Update the words in the dictionary with the improved words
         for improved_word, improved_translation in improved_words.items():
             for existing_word in words_to_improve:
+                if not existing_word in dictionary:
+                    continue
+
                 existing_translation = dictionary[existing_word]
                 if improved_translation.lower() == existing_translation.lower():
                     click.echo(
