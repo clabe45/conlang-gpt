@@ -106,6 +106,22 @@ def test_reduce_dictionary_removes_similar_words(
 @pytest.mark.parametrize(
     "word1, translation1, word2, translation2",
     [
+        ("E", "Hello", "I", "Goodbye"),
+    ],
+)
+def test_reduce_dictionary_does_not_remove_distinct_words(
+    word1, translation1, word2, translation2
+):
+    dictionary = reduce_dictionary(
+        {word1: translation1, word2: translation2}, 0.9, "text-embedding-ada-002"
+    )
+
+    assert len(dictionary) == 2
+
+
+@pytest.mark.parametrize(
+    "word1, translation1, word2, translation2",
+    [
         ("E", "Hello", "I", "Hello"),
         ("E", "Hello", "I", "Hi"),
         ("E", "Be", "I", "Am"),
@@ -121,6 +137,22 @@ def test_merge_dictionaries_merges_words_with_similar_translations(
     )
 
     assert len(dictionary) == 1
+
+
+@pytest.mark.parametrize(
+    "word1, translation1, word2, translation2",
+    [
+        ("E", "Hello", "I", "Goodbye"),
+    ],
+)
+def test_merge_dictionaries_does_not_merge_words_with_distinct_translations(
+    word1, translation1, word2, translation2
+):
+    dictionary = merge_dictionaries(
+        {word1: translation1}, {word2: translation2}, 0.9, "text-embedding-ada-002"
+    )
+
+    assert len(dictionary) == 2
 
 
 def test_translate_text_translated_translation_is_similar_to_original_text(
