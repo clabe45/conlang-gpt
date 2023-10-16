@@ -581,6 +581,7 @@ def improve_dictionary(
                 }
             ],
             temperature=0,
+            presence_penalty=1,
         )
         response = chat_completion["choices"][0]["message"]["content"]
 
