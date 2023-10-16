@@ -577,7 +577,7 @@ def improve_dictionary(
             messages=[
                 {
                     "role": "user",
-                    "content": f'Ensure that the following words are correctly translated into the constructed language outlined below. If any of the words do not adhere to the guide below, update them as you see fit. Your response should be a CSV document with two columns: Conlang and English. Each row represents a word that needs to be updated and should have exactly two cells. If the word list below is correct and complete, respond with "No problems found".\n\nLanguage guide:\n\n{guide}\n\nWords to improve:\n\n{formatted_batch}',
+                    "content": f'Ensure that the following words are correctly translated into the constructed language outlined below. If any of the words do not adhere to the guide below, update them as you see fit. Your response should be a CSV document with two columns: Conlang and English. Each row represents an updated word and should have exactly two cells. If the word list below is correct and complete, respond with "No problems found".\n\nLanguage guide:\n\n{guide}\n\nWords to improve:\n\n{formatted_batch}',
                 }
             ],
         )
