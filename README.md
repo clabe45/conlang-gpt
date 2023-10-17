@@ -6,14 +6,14 @@ Conlang GPT is a command line tool for creating, modifying and using constructed
 
 > :warning: This tool is in early development. It is not ready for production use. Regardless, anyone who's generating fake languages in a business context should carefully consider their life choices, but this is fine because it's open source.
 
-| Feature | Status |
-| --- | --- |
+| Feature                                                               | Status           |
+| --------------------------------------------------------------------- | ---------------- |
 | Automatically generate specifications for written or spoken languages | :sparkles: Alpha |
-| Automatically or manually improve language specs iteratively | :sparkles: Alpha |
-| Translate any text to or from the generated languages | :sparkles: Alpha |
-| Generate vocabulary lazily | :sparkles: Alpha |
-| Automatically update vocabulary when language specs change | :sparkles: Alpha |
-| Support for all of OpenAI's chat models | :sparkles: Alpha |
+| Automatically or manually improve language specs iteratively          | :sparkles: Alpha |
+| Translate any text to or from the generated languages                 | :sparkles: Alpha |
+| Generate vocabulary lazily                                            | :sparkles: Alpha |
+| Automatically update vocabulary when language specs change            | :sparkles: Alpha |
+| Support for all of OpenAI's chat models                               | :sparkles: Alpha |
 
 ## Installation
 
@@ -24,6 +24,7 @@ pip install conlang-gpt
 ## Anatomy of a Language
 
 Languages are represented as two files:
+
 - **Guide**: The purpose of the language guide is to describe how to use the language, including rules related to grammar and phonetics.
 - **Dictionary**: The dictionary contains the vocabulary for the language. It is built up lazily as more and more text is translated.
 
