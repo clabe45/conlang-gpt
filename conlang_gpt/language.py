@@ -86,39 +86,39 @@ def _get_related_words(text, dictionary, embeddings_model):
         click.style(f"Getting the most relevant words from the dictionary...", dim=True)
     )
 
-    # The longer the text, the more words we want to return
-    max_words = min(len(dictionary), int(math.ceil(len(text) / 2.0)))
+    # Calculate the cosine similarity between each word in the text and each
+    # word in the dictionary (both the word and its English translation)
+    words_in_text = text.split()
+    word_embeddings = [
+        _get_embeddings(word, embeddings_model) for word in words_in_text
+    ]
+    related_words = []
+    for word_embedding in word_embeddings:
+        word_similarities = {}
+        for word, translation in dictionary.items():
+            word_similarity = cosine_similarity(
+                word_embedding, _get_embeddings(word, embeddings_model)
+            )
+            translation_similarity = cosine_similarity(
+                word_embedding, _get_embeddings(translation, embeddings_model)
+            )
+            similarity = max(word_similarity, translation_similarity)
+            word_similarities[word] = similarity
 
-    # Get the embeddings for the text
-    text_embeddings = _get_embeddings(text, embeddings_model)
+        if not word_similarities:
+            continue
 
-    # Calculate the cosine similarity between the text and each word in the dictionary (both the word and the English translation)
-    word_similarities = {}
-    for word, translation in dictionary.items():
-        # Calculate the cosine similarity between the text and the word
-        word_embeddings = _get_embeddings(word, embeddings_model)
-        word_simularity = cosine_similarity(text_embeddings, word_embeddings)
+        most_related_word = sorted(
+            word_similarities, key=word_similarities.get, reverse=True
+        )[0]
 
-        # Calculate the cosine similarity between the text and the translation
-        translation_embeddings = _get_embeddings(translation, embeddings_model)
-        translation_simularity = cosine_similarity(
-            text_embeddings, translation_embeddings
-        )
+        # Skip words that aren't similar enough
+        if word_similarities[most_related_word] < 0.75:
+            continue
 
-        simularity = max(word_simularity, translation_simularity)
+        related_words.append(most_related_word)
 
-        # Only include words with a simularity greater than 0.75
-        if simularity > 0.75:
-            word_similarities[word] = simularity
-
-    # Sort the words by similarity
-    related_words = sorted(word_similarities, key=word_similarities.get, reverse=True)
-
-    # Return the most similar words
-    if len(related_words) > max_words:
-        return related_words[:max_words]
-    else:
-        return related_words
+    return related_words
 
 
 def _parse_dictionary_from_paragraph(paragraph, similarity_threshold, embeddings_model):
