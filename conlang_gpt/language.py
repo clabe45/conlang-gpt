@@ -246,7 +246,7 @@ def generate_english_text(model):
 
 
 def improve_language(guide, dictionary, model, embeddings_model, text=None):
-    click.echo(click.style(f"Improving language using local model...", dim=True))
+    click.echo(click.style(f"Improving language using {model}...", dim=True))
 
     if text is None:
         # Identify problems with the language
