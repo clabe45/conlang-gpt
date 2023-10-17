@@ -14,6 +14,8 @@ python = ">=3.9, <4.0"
 openai = {extras = ["embeddings"], version = "^0.27.8"}
 python-dotenv = "^1.0.0"
 click = "^8.1.3"
+langchain = "^0.0.314"
+sentence-transformers = "^2.2.2"
 
 
 [tool.poetry.scripts]

@@ -5,11 +5,10 @@ import math
 import re
 from openai.embeddings_utils import cosine_similarity
 import os
-import pickle
 
 import click
 
-from .openai import complete_chat, get_embedding
+from .openai import complete_chat
 
 
 class LanguageError(Exception):
@@ -56,29 +55,6 @@ class TranslationError(LanguageError):
     pass
 
 
-def _get_embeddings(text, embeddings_model):
-    """Retrieve and cache the embeddings for some text."""
-
-    # Load the cached word embeddings
-    if os.path.exists(f".conlang/cache/embeddings/{embeddings_model}.pkl"):
-        with open(f".conlang/cache/embeddings/{embeddings_model}.pkl", "rb") as f:
-            embeddings = pickle.load(f)
-    else:
-        embeddings = {}
-
-    # Calculate the embeddings if they are not cached
-    if text not in embeddings:
-        embeddings[text] = get_embedding(text, embeddings_model)
-
-        # Cache the embeddings
-        if not os.path.exists(".conlang/cache/embeddings"):
-            os.makedirs(".conlang/cache/embeddings")
-        with open(f".conlang/cache/embeddings/{embeddings_model}.pkl", "wb") as f:
-            pickle.dump(embeddings, f)
-
-    return embeddings[text]
-
-
 def _get_related_words(text, dictionary, embeddings_model):
     """Get the most related words from the dictionary."""
 
@@ -90,17 +66,17 @@ def _get_related_words(text, dictionary, embeddings_model):
     # word in the dictionary (both the word and its English translation)
     words_in_text = text.split()
     word_embeddings = [
-        _get_embeddings(word, embeddings_model) for word in words_in_text
+        embeddings_model.embed_documents([word])[0] for word in words_in_text
     ]
     related_words = []
     for word_embedding in word_embeddings:
         word_similarities = {}
         for word, translation in dictionary.items():
             word_similarity = cosine_similarity(
-                word_embedding, _get_embeddings(word, embeddings_model)
+                word_embedding, embeddings_model.embed_documents([word])[0]
             )
             translation_similarity = cosine_similarity(
-                word_embedding, _get_embeddings(translation, embeddings_model)
+                word_embedding, embeddings_model.embed_documents([translation])[0]
             )
             similarity = max(word_similarity, translation_similarity)
             word_similarities[word] = similarity
@@ -270,7 +246,7 @@ def generate_english_text(model):
 
 
 def improve_language(guide, dictionary, model, embeddings_model, text=None):
-    click.echo(click.style(f"Improving language using {model}...", dim=True))
+    click.echo(click.style(f"Improving language using local model...", dim=True))
 
     if text is None:
         # Identify problems with the language
@@ -379,13 +355,11 @@ def modify_language(guide, changes, model):
 def reduce_dictionary(words, similarity_threshold, embeddings_model):
     """Remove similar words from a dictionary."""
 
-    click.echo(
-        click.style(f"Removing similar words using {embeddings_model}...", dim=True)
-    )
+    click.echo(click.style(f"Removing similar words using local model...", dim=True))
 
     # Retrieve the embeddings for each word
     translation_embeddings = {
-        word: _get_embeddings(translation, embeddings_model)
+        word: embeddings_model.embed_query(translation)
         for word, translation in words.items()
     }
 
@@ -618,17 +592,15 @@ def improve_dictionary(
 def merge_dictionaries(a, b, similarity_threshold, embeddings_model):
     """Merge two vocabulary dictionaries, removing similar words."""
 
-    click.echo(
-        click.style(f"Merging dictionaries using {embeddings_model}...", dim=True)
-    )
+    click.echo(click.style(f"Merging dictionaries using local model...", dim=True))
 
     # Retrieve the embeddings for each translation
     a_embeddings = {
-        word: _get_embeddings(translation, embeddings_model)
+        word: embeddings_model.embed_query(translation)
         for word, translation in a.items()
     }
     b_embeddings = {
-        word: _get_embeddings(translation, embeddings_model)
+        word: embeddings_model.embed_query(translation)
         for word, translation in b.items()
     }
 

@@ -1,5 +1,6 @@
 import click
 
+from ..embeddings import get_embeddings_model
 from ..language import (
     ImproveDictionaryError,
     create_dictionary_for_text,
@@ -21,7 +22,6 @@ def translate(
     max_improvements,
     similarity_threshold,
     model,
-    embedding_model,
 ):
     """Translate text to or from a constructed language."""
 
@@ -31,6 +31,9 @@ def translate(
 
     # Load the dictionary
     dictionary = load_dictionary(dictionary_path)
+
+    # Create the embedding model
+    embedding_model = get_embeddings_model()
 
     # Add any missing words to the dictionary
     new_words = create_dictionary_for_text(

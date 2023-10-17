@@ -50,14 +50,7 @@ def create(design_goals, guide_path, model):
     default="gpt-3.5-turbo",
     help="OpenAI model to use. Defaults to gpt-3.5-turbo.",
 )
-@click.option(
-    "--embeddings-model",
-    default="text-embedding-ada-002",
-    help="OpenAI model to use for word embeddings in 'example' mode. Defaults to text-embedding-ada-002.",
-)
-def modify(
-    guide_path, dictionary_path, changes, similarity_threshold, model, embeddings_model
-):
+def modify(guide_path, dictionary_path, changes, similarity_threshold, model):
     """Make specific changes to the language."""
 
     modify_(
@@ -66,7 +59,6 @@ def modify(
         changes,
         similarity_threshold,
         model,
-        embeddings_model,
     )
 
 
@@ -95,18 +87,12 @@ def modify(
     default="gpt-3.5-turbo",
     help="OpenAI model to use. Defaults to gpt-3.5-turbo.",
 )
-@click.option(
-    "--embeddings-model",
-    default="text-embedding-ada-002",
-    help="OpenAI model to use for word embeddings in 'example' mode. Defaults to text-embedding-ada-002.",
-)
 def improve(
     guide_path,
     dictionary_path,
     max_iterations,
     similarity_threshold,
     model,
-    embeddings_model,
 ):
     """Automatically improve the language."""
 
@@ -116,7 +102,6 @@ def improve(
         max_iterations,
         similarity_threshold,
         model,
-        embeddings_model,
     )
 
 
@@ -139,11 +124,6 @@ def improve(
     help="Maximum similarity between two words to be considered the same. Defaults to 0.98.",
 )
 @click.option("--model", default="gpt-3.5-turbo", help="OpenAI model to use")
-@click.option(
-    "--embedding-model",
-    default="text-embedding-ada-002",
-    help="OpenAI model to use for word embeddings",
-)
 def translate(
     guide_path,
     dictionary_path,
@@ -151,7 +131,6 @@ def translate(
     max_improvements,
     similarity_threshold,
     model,
-    embedding_model,
 ):
     """Translate text to or from a constructed language."""
 
@@ -162,5 +141,4 @@ def translate(
         max_improvements,
         similarity_threshold,
         model,
-        embedding_model,
     )

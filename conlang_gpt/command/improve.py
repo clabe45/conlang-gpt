@@ -1,5 +1,7 @@
 import click
 
+from conlang_gpt.embeddings import get_embeddings_model
+
 from ..language import (
     ImproveDictionaryError,
     improve_dictionary,
@@ -16,7 +18,6 @@ def improve(
     max_iterations,
     similarity_threshold,
     model,
-    embeddings_model,
 ):
     """Automatically improve the language."""
 
@@ -26,6 +27,9 @@ def improve(
 
     # Load the dictionary
     dictionary = load_dictionary(dictionary_path)
+
+    # Create the embeddings model
+    embeddings_model = get_embeddings_model()
 
     # Revise the language guide
     for i in range(max_iterations):

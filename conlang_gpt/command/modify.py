@@ -1,5 +1,7 @@
 import click
 
+from conlang_gpt.embeddings import get_embeddings_model
+
 from ..language import (
     load_dictionary,
     improve_dictionary,
@@ -8,9 +10,7 @@ from ..language import (
 )
 
 
-def modify(
-    guide_path, dictionary_path, changes, similarity_threshold, model, embeddings_model
-):
+def modify(guide_path, dictionary_path, changes, similarity_threshold, model):
     """Make specific changes to the language."""
 
     # Load the beginner's guide
@@ -22,6 +22,9 @@ def modify(
         dictionary = load_dictionary(dictionary_path)
     else:
         dictionary = {}
+
+    # Create the embedding model
+    embeddings_model = get_embeddings_model()
 
     # Update the language guide
     guide = modify_language(guide, changes, model)

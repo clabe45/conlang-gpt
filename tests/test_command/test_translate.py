@@ -13,7 +13,6 @@ def test_translate_with_improvements_disabled_populates_empty_dictionary(
         0,
         0.98,
         "gpt-4",
-        "text-embedding-ada-002",
     )
 
     csv_reader = csv.reader(dictionary_path.open("r"))

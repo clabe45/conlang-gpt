@@ -90,9 +90,6 @@ Options:
                                 considered the same. Defaults to 0.98.
   --model TEXT                  OpenAI model to use. Defaults to
                                 gpt-3.5-turbo.
-  --embeddings-model TEXT       OpenAI model to use for word embeddings in
-                                'example' mode. Defaults to text-embedding-
-                                ada-002.
   --help                        Show this message and exit.
 ```
 
@@ -115,9 +112,6 @@ Options:
                                 considered the same. Defaults to 0.98.
   --model TEXT                  OpenAI model to use. Defaults to
                                 gpt-3.5-turbo.
-  --embeddings-model TEXT       OpenAI model to use for word embeddings in
-                                'example' mode. Defaults to text-embedding-
-                                ada-002.
   --help                        Show this message and exit.
 ```
 
