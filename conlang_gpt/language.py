@@ -138,6 +138,10 @@ def _parse_dictionary_from_paragraph(paragraph, similarity_threshold, embeddings
 
 
 def _parse_dictionary(text, similarity_threshold, embeddings_model):
+    if text.startswith("```") and text.endswith("```"):
+        text = text[3:-3].removeprefix("csv\n")
+    text = text.strip()
+
     # Sometimes, ChatGPT returns multiple paragraphs. If this happens, use the
     # first paragraph that can be parsed as a dictionary.
     if "\n\n" in text:
