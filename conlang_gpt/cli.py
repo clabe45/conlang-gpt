@@ -1,5 +1,3 @@
-import csv
-
 import click
 
 from .command.create import create as create_
