@@ -18,8 +18,8 @@ def cli():
 )
 @click.option(
     "--model",
-    default="gpt-3.5-turbo",
-    help="OpenAI model to use. Defaults to gpt-3.5-turbo.",
+    default="chatgpt-4o-latest",
+    help="OpenAI model to use. Defaults to chatgpt-4o-latest.",
 )
 def create(design_goals, guide_path, model):
     """Create a constructed language."""
@@ -45,8 +45,8 @@ def create(design_goals, guide_path, model):
 )
 @click.option(
     "--model",
-    default="gpt-3.5-turbo",
-    help="OpenAI model to use. Defaults to gpt-3.5-turbo.",
+    default="chatgpt-4o-latest",
+    help="OpenAI model to use. Defaults to chatgpt-4o-latest.",
 )
 def modify(guide_path, dictionary_path, changes, similarity_threshold, model):
     """Make specific changes to the language."""
@@ -82,8 +82,8 @@ def modify(guide_path, dictionary_path, changes, similarity_threshold, model):
 )
 @click.option(
     "--model",
-    default="gpt-3.5-turbo",
-    help="OpenAI model to use. Defaults to gpt-3.5-turbo.",
+    default="chatgpt-4o-latest",
+    help="OpenAI model to use. Defaults to chatgpt-4o-latest.",
 )
 def improve(
     guide_path,
@@ -121,7 +121,7 @@ def improve(
     default=0.98,
     help="Maximum similarity between two words to be considered the same. Defaults to 0.98.",
 )
-@click.option("--model", default="gpt-3.5-turbo", help="OpenAI model to use")
+@click.option("--model", default="chatgpt-4o-latest", help="OpenAI model to use")
 def translate(
     guide_path,
     dictionary_path,

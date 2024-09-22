@@ -67,7 +67,7 @@ Usage: conlang create [OPTIONS]
 Options:
   --design-goals TEXT
   --guide TEXT
-  --model TEXT         OpenAI model to use. Defaults to gpt-3.5-turbo.
+  --model TEXT         OpenAI model to use. Defaults to chatgpt-4o-latest.
   --help               Show this message and exit.
 ```
 
@@ -90,7 +90,7 @@ Options:
   --similarity-threshold FLOAT  Maximum similarity between two words to be
                                 considered the same. Defaults to 0.98.
   --model TEXT                  OpenAI model to use. Defaults to
-                                gpt-3.5-turbo.
+                                chatgpt-4o-latest.
   --help                        Show this message and exit.
 ```
 
@@ -112,7 +112,7 @@ Options:
   --similarity-threshold FLOAT  Maximum similarity between two words to be
                                 considered the same. Defaults to 0.98.
   --model TEXT                  OpenAI model to use. Defaults to
-                                gpt-3.5-turbo.
+                                chatgpt-4o-latest.
   --help                        Show this message and exit.
 ```
 
